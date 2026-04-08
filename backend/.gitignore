@@ -1,0 +1,4 @@
+.env
+.venv
+
+do_ocr.py
