@@ -55,7 +55,7 @@ const ChatBox = ({ setIsSidebarOpen }) => {
       {/* Input */}
       <form onSubmit={onSubmit} className='bg-[#f8fafc] border border-[#82735a]/30 rounded-full w-full max-w-2xl p-3 pl-4 mx-auto flex gap-4 items-center'>
         <input onChange={(e) => setPrompt(e.target.value)} value={prompt} type="text" placeholder='Nhập tin nhắn của bạn...' className='flex-1 w-full text-sm outline-none' required />
-        <button disabled={loading} type='submit' className='p-2 px-4 bg-[#D85A30] text-white rounded-md'>Gửi</button>
+        <button disabled={loading} type='submit' className='p-2 px-4 bg-[#D85A30] hover:bg-amber-700 text-white rounded-full'>Gửi</button>
       </form>
       </div>
     </div>
