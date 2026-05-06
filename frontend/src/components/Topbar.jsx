@@ -17,14 +17,14 @@ const Topbar = ({ setIsSidebarOpen }) => {
       <div className='flex items-center gap-2.5'>
         <LuMenu className='w-6 h-6 cursor-pointer md:hidden' onClick={() => setIsSidebarOpen(true)} />
         <span className='text-sm font-medium'>{subject}</span>
-        <span className='text-xs text-[#993C1D] font-medium px-2.5 py-[3px] rounded-[100px] bg-[#FAECE7]'>{classyear}</span>
+        <span className='text-xs text-[#993C1D] font-medium px-2.5 py-0.75 rounded-[100px] bg-[#FAECE7]'>{classyear}</span>
       </div>
       {/* Selection section */}
       <div className='flex items-center gap-4'>
         {/* Class selection */}
         <div className='flex items-center gap-2'>
           <span className='text-sm font-medium max-lg:hidden'>Lớp học</span>
-          <select className='text-[13px] cursor-pointer px-2.5 py-[5px] border-[0.5px] outline-none rounded-md' value={classyear} onChange={handleChangeClassyear}>
+          <select className='text-[13px] cursor-pointer px-2.5 py-1.25 border-[0.5px] outline-none rounded-md' value={classyear} onChange={handleChangeClassyear}>
             <option value={"Lớp 10"}>Lớp 10</option>
             <option value={"Lớp 11"}>Lớp 11</option>
             <option value={"Lớp 12"}>Lớp 12</option>
@@ -33,7 +33,7 @@ const Topbar = ({ setIsSidebarOpen }) => {
         {/* Subject selection */}
         <div className='flex items-center gap-2'>
           <span className='text-sm font-medium max-lg:hidden'>Môn học</span>
-          <select className='text-[13px] cursor-pointer px-2.5 py-[5px] border-[0.5px] outline-none rounded-md' value={subject} onChange={handleChangeSubject}>
+          <select className='text-[13px] cursor-pointer px-2.5 py-1.25 border-[0.5px] outline-none rounded-md' value={subject} onChange={handleChangeSubject}>
             <option value={"Toán học"}>Toán học</option>
             <option value={"Lịch sử"}>Lịch sử</option>
           </select>

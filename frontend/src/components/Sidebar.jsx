@@ -11,7 +11,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
   const { chats, setSelectedChat, user, navigate } = useAppContext();
   const [search, setSearch] = useState('')
   return (
-    <div className={`flex flex-col h-screen min-w-72 p-2 bg-[#fbf9f7] border border-[#82735a]/30 transition-all duration-500 max-md:absolute left-0 z-1 ${!isSidebarOpen && 'max-md:-translate-x-full'}`}>
+    <div className={`flex flex-col h-screen min-w-72 p-2 bg-[#fbf9f7] border-r border-[#82735a]/30 shadow-sm transition-all duration-500 max-md:absolute left-0 z-1 ${!isSidebarOpen && 'max-md:-translate-x-full'}`}>
       <div className="sidebar-header">
         <div className="sidebar-logo">
           <div className="sidebar-logo-icon">

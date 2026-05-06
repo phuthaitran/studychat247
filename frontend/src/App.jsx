@@ -16,20 +16,20 @@ const App = () => {
   return (
     <>
       <div className='home'>
-      <Routes>
-        <Route path='/login' element={<LoginSignup />} />
-        <Route path='*' element={
-          <div className='home__nav'>
-            <Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
-            <Routes>
-              <Route path='/' element={<ChatBox setIsSidebarOpen={setIsSidebarOpen} />} />
-              <Route path='/history' element={<History />} />
-              <Route path='/math' element={<Math />} />
-            </Routes>
-          </div>
-        } />
-      </Routes>
-    </div>
+        <Routes>
+          <Route path='/login' element={<LoginSignup />} />
+          <Route path='*' element={
+            <div className='home__nav'>
+              <Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+              <Routes>
+                <Route path='/' element={<ChatBox setIsSidebarOpen={setIsSidebarOpen} />} />
+                <Route path='/history' element={<History />} />
+                <Route path='/math' element={<Math />} />
+              </Routes>
+            </div>
+          } />
+        </Routes>
+      </div>
 
     </>
   )
