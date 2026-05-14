@@ -1,6 +1,12 @@
+# environment files & directories
 .env
-.venv
+.venv/
 
+# python
 __pycache__
 
+# OCR implementation file
 do_ocr.py
+
+# vectorstore
+vectorstore/
