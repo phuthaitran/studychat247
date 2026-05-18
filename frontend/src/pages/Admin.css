@@ -1,0 +1,206 @@
+.dashboard-header {
+    padding: 30px 50px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.dashboard-header button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: #dc3545;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s;
+}
+
+.dashboard-header button:hover {
+    background: #b02a37;
+}
+
+.dashboard-header__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.dashboard-header__logo--icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: #D85A30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.dashboard-header__logo--text {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.dashboard-textbooks {
+    padding: 20px 50px;
+}
+
+.dashboard-textbooks h1 {
+    font-size: 28px;
+    font-weight: bolder;
+}
+
+.dashboard-textbooks button {
+    margin: 20px 0px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 0.5px solid black;
+    background: transparent;
+    color: black;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s;
+}
+
+.dashboard-textbooks button:hover {
+    background: #f8d3c7;
+}
+
+.user-management {
+    padding: 20px 50px;
+}
+
+.user-management-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.user-management-header h1 {
+    font-size: 28px;
+    font-weight: bolder;
+}
+
+.user-management-header button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: #D85A30;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s;
+}
+
+.user-management-header button:hover {
+    background: #b45309;
+}
+
+/* User Table */
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+    font-size: 14px;
+}
+
+.user-table thead tr {
+    background: #f3f4f6;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.user-table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.user-table tbody tr {
+    border-bottom: 1px solid #e5e7eb;
+    transition: background 0.12s;
+}
+
+.user-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.user-table tbody tr:hover {
+    background: #fafafa;
+}
+
+.user-table td {
+    padding: 12px 16px;
+    color: #374151;
+}
+
+/* Role badges */
+.role-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.role-badge--admin {
+    background: #fde8d8;
+    color: #c2410c;
+}
+
+.role-badge--user {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+/* Action buttons */
+.action-cell {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.btn-edit,
+.btn-delete {
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    border: none;
+}
+
+.btn-edit {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.btn-edit:hover {
+    background: #bae6fd;
+}
+
+.btn-delete {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.btn-delete:hover {
+    background: #fecaca;
+}
