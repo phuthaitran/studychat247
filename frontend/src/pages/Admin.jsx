@@ -39,7 +39,8 @@ const Admin = () => {
       </div>
 
       <div className="dashboard-textbooks">
-        <h1>Add or remove the books in "data" folder, then click on this button: </h1>
+        <h1>Database management:</h1>
+        <h2>Add or remove the books in "data" folder, then click on this button: </h2>
         <button>Update Knowledgebase</button>
         {/* Some text that will show database update status */}
       </div>
