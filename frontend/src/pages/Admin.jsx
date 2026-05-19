@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { IoClose } from "react-icons/io5";
 import "./Admin.css"
 
 import { LuGraduationCap } from "react-icons/lu";
@@ -26,6 +27,7 @@ const mockUsers = [
 ]
 
 const Admin = () => {
+  const [isOpen, setIsOpen] = useState(false)
   return (
     <>
       <div className="dashboard-header">
@@ -35,7 +37,27 @@ const Admin = () => {
           </div>
           <span className="dashboard-header__logo--text">StudyChat247 ADMIN PANEL</span>
         </div>
-        <button>Log out</button>
+        <button className="danger-button" onClick={() => setIsOpen(true)}>Log out</button>
+        {isOpen && (
+          <div onClick={() => setIsOpen(false)} className="logout-modal">
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="logout-modal__bg"
+            >
+              <div className="modal-prompt">
+                <h2 className="modal-header">Log out</h2>
+                <p className="modal-info">Are you sure you want to log out?</p>
+              </div>
+              <div className="modal-selection">
+                <button className="danger-button">Log out</button>
+                <button className="cancel-button" onClick={() => setIsOpen(false)}>Cancel</button>
+              </div>
+              <div className="close-button">
+                <IoClose onClick={() => setIsOpen(false)} size={30} />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="dashboard-textbooks">

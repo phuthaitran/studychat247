@@ -4,23 +4,6 @@
     justify-content: space-between;
 }
 
-.dashboard-header button {
-    padding: 8px 12px;
-    border-radius: 6px;
-    background: #dc3545;
-    color: white;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: background 0.15s;
-}
-
-.dashboard-header button:hover {
-    background: #b02a37;
-}
 
 .dashboard-header__logo {
     display: flex;
@@ -207,4 +190,96 @@
 
 .btn-delete:hover {
     background: #fecaca;
+}
+
+.logout-modal {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    min-height: 100vh;
+    background-color: rgb(0 0 0 / 0.5);
+}
+
+.logout-modal__bg {
+    background-color: white;
+    padding: 1.5rem 1.5rem;
+    border-radius: 8px;
+    position: relative;
+}
+
+.modal-prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: 400px;
+    height: max-content;
+}
+
+
+.modal-header {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 700;
+}
+
+.modal-info {
+    color: #374151;
+}
+
+.modal-selection {
+    display: flex;
+    margin-top: 1rem;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.danger-button {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    background: #dc3545;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s;
+}
+
+.danger-button:hover {
+    background: #b02a37;
+}
+
+.cancel-button {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    background: #D1D5DB;
+    color: black;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s;
+}
+
+.cancel-button:hover {
+    background: #9CA3AF;
+}
+
+.close-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    cursor: pointer;
 }
