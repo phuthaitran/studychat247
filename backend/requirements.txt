@@ -1,0 +1,14 @@
+dotenv
+langchain
+langchain-community
+langchain-text-splitters
+langchain-google-genai
+langchain-huggingface
+langchain-chroma
+mistralai
+fastapi[standard]
+chroma
+unstructured 
+pwdlib[argon2]
+pyjwt
+pydantic-settings
