@@ -57,3 +57,14 @@
 .new-chat-btn:hover {
   background: #f8d3c7;
 }
+
+.dropdown-profile {
+  position: absolute;
+  bottom: 5rem;
+  left: 7rem;
+  width: 150px;
+  padding: 12px;
+  border-radius: 6px;
+  background-color: white;
+  border: 1px solid gray;
+}
