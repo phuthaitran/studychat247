@@ -90,7 +90,7 @@ export const dummyChats = [
                 "isImage": false,
                 "isPublished": false,
                 "role": "user",
-                "content": "a boy running on water",
+                "content": "a boy running on water and see a beautiful butterfly",
                 "timestamp": 1755178179612,
             },
             {

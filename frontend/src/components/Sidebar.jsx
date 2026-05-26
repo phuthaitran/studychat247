@@ -39,14 +39,14 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
           {
             chats.filter((chat) => chat.messages[0] ? chat.messages[0]?.content.toLowerCase().includes(search.toLowerCase())
               : chat.name.toLowerCase().includes(search.toLowerCase())).map((chat) => (
-                <div onClick={() => { navigate('/'); setSelectedChat(chat); setIsSidebarOpen(false) }} key={chat._id} className='p-2 px-4 mx-4 mt-2 border border-gray-300 rounded-md cursor-pointer flex justify-between group'>
+                <div onClick={() => { navigate('/'); setSelectedChat(chat); setIsSidebarOpen(false) }} key={chat._id} className='p-2 px-4 mx-4 mt-2 border gap-1 border-gray-300 rounded-md cursor-pointer flex justify-between group'>
                   <div>
                     <p className='truncate w-full'>
-                      {chat.messages[0] ? chat.messages[0]?.content.slice(0, 30) + "..." : chat.name}
+                      {chat.messages[0] ? chat.messages[0]?.content.slice(0, 25) + "..." : chat.name}
                     </p>
                     <p className='text-xs text-gray-500'>{moment(chat.updatedAt).fromNow()}</p>
                   </div>
-                  <img src={assets.bin_icon} className='hidden group-hover:block w-4 cursor-pointer invert'></img>
+                  <img src={assets.bin_icon} className='w-4 cursor-pointer invert'></img>
                 </div>
               ))
           }
@@ -58,9 +58,9 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         <img src={assets.user_icon} className='w-7 rounded-full' alt="" />
         <p className='flex-1 text-sm truncate'>{user ? user.name : 'Đăng nhập tài khoản của bạn'}</p>
         {user && <LuEllipsisVertical className='h-6 cursor-pointer group-hover:block hover:bg-gray-100' onClick={() => setOpenMenu((prev) => !prev)} />}
+        {openMenu && <DropdownProfile />}
       </div>
 
-      {openMenu && <DropdownProfile />}
 
       {/* Close button */}
       <LuX onClick={() => setIsSidebarOpen(false)} className='absolute top-3 right-3 w-6 h-6 cursor-pointer md:hidden' alt='Close' />
