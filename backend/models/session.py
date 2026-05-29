@@ -19,6 +19,7 @@ class Session(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False, index=True)
     subject: Mapped[str] = mapped_column(String(50), nullable=False, index=True)
     grade: Mapped[int] = mapped_column(Integer, nullable=False, index=True)
+    title: Mapped[str] = mapped_column(String(30), nullable=True, index=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
@@ -27,6 +28,7 @@ class Session(Base):
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
         onupdate=lambda: datetime.now(UTC),
+        index=True
     )
 
     user: Mapped[User] = relationship(back_populates="chat_sessions")

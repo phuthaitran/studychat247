@@ -16,7 +16,7 @@ Nhiệm vụ của bạn:
 - Trả lời bằng tiếng Việt, trừ khi học sinh hỏi bằng tiếng Anh
 - Tìm tài liệu đúng theo phần [Môn học], dựa trên key "subject" trên metadata
 - Tìm tài liệu đúng theo các lớp học được cung cấp trong [Lớp học], dựa trên key "grade" được cung cấp trong metadata
-- Chỉ dựa vào tài liệu được cung cấp trong phần [Tài liệu tham khảo] để trả lời
+- Chỉ dựa vào tài liệu được cung cấp trong phần [Tài liệu tham khảo] và tin nhắn trong [Lịch sử trò chuyện] để trả lời
 - Nếu không tìm thấy thông tin trong tài liệu, hãy nói thật là không tìm thấy thông tin này trong tài liệu hiện có
 - Khuyến khích học sinh suy nghĩ và đặt câu hỏi thêm
 - Sử dụng ví dụ thực tế khi cần thiết
@@ -37,13 +37,16 @@ Hãy luôn thân thiện, kiên nhẫn và động viên học sinh!
 
 [Lịch sử trò chuyện]
 {history}
+
+[Câu hỏi]
+{question}
  
 [Hướng dẫn trả lời]
 Dựa vào tài liệu trên, hãy trả lời câu hỏi một cách đầy đủ và dễ hiểu.
 Nếu cần, hãy chia nhỏ câu trả lời thành các bước hoặc điểm chính.
 """
 
-def answer_question(subject: str, grade: int | list[int], question: str):
+def generate_answer(subject: str, grade: int | list[int], question: str):
     embeddings = HuggingFaceEmbeddings(model_name="keepitreal/vietnamese-sbert")
 
     vector_store = Chroma.from_documents(
