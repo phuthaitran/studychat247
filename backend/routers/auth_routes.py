@@ -28,7 +28,7 @@ router = APIRouter()
 
 # Register
 @router.post(
-    "",
+    "/register",
     response_model=UserPrivate,
     status_code=status.HTTP_201_CREATED,
 )

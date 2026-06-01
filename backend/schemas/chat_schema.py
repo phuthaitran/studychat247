@@ -41,3 +41,13 @@ class AskResponse(BaseModel):
     session_id: str          # UUID string – needed by the frontend
     session_created: bool    # True when a brand-new session was created
     message: MessageOut      # The assistant's reply
+    
+class SessionResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
+    id: UUID4
+    title: str
+    subject: str
+    grade: int
+    created_at: datetime
+    updated_at: datetime

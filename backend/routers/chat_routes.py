@@ -5,9 +5,9 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.database import get_db
-from schemas.chat_schema import ChatRequest, AskResponse, MessageOut
+from schemas.chat_schema import ChatRequest, AskResponse, MessageOut, SessionResponse
 from services.auth import CurrentUser
-from services.chat_services import create_session, process_chat
+from services.chat_services import create_session, process_chat, get_sessions, delete_session
 
 router = APIRouter()
 
@@ -68,3 +68,38 @@ async def ask(
         session_created=session_created,
         message=MessageOut.model_validate(assistant_msg),
     )
+
+# Get current user sessions
+@router.get(
+    "/sessions",
+    response_model=list[SessionResponse],
+    status_code=status.HTTP_200_OK,
+    summary="Get all sessions for the current user, ordered by most recently updated",
+)
+async def get_user_sessions(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: CurrentUser,
+) -> list[SessionResponse]:
+    """
+    Returns all chat sessions belonging to the authenticated user,
+    sorted by `updated_at` descending (most recent activity first).
+
+    Security
+    ────────
+    JWT validation is handled transparently by the `CurrentUser` dependency.
+    The endpoint is completely unreachable without a valid, non-expired access token.
+    """
+    sessions = await get_sessions(db, current_user.id)
+    return sessions
+
+@router.delete(
+    "/sessions/{session_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete session"
+)
+async def delete_user_session(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: CurrentUser,
+    session_id: str
+):
+    await delete_session(db, current_user.id, session_id)

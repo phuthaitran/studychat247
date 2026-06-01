@@ -12,7 +12,7 @@ from core.database import Base
 if TYPE_CHECKING:
     from session import Session
     
-class RoleEnum(enum.Enum):
+class MsgRoleEnum(enum.Enum):
     USER = "user"
     ASSISTANT = "assistant"
 
@@ -23,11 +23,11 @@ class Message(Base):
         Index('ix_message_sequence', 'session', 'sequence_number'),
     )
 
-    id: Mapped[Uuid] = mapped_column(Uuid, primary_key=True, index=True)
+    id: Mapped[Uuid] = mapped_column(Uuid(as_uuid=True), primary_key=True, index=True)
     session_id: Mapped[Uuid] = mapped_column(
         ForeignKey("chat_session.id"), nullable=False, index=True, name="session"
     )
-    role: Mapped[RoleEnum] = mapped_column(Enum(RoleEnum), nullable=False)
+    role: Mapped[MsgRoleEnum] = mapped_column(Enum(MsgRoleEnum), nullable=False)
     content: Mapped[str] = mapped_column(Text, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),

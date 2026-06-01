@@ -31,11 +31,13 @@ Design notes
 
 import uuid
 import tiktoken
+from fastapi import HTTPException, status
 from datetime import datetime, UTC
 from sqlalchemy import select, desc, func, update
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
-from models.message import Message, RoleEnum
+from models.message import Message, MsgRoleEnum
 from models.session import Session as ChatSession
 from services.rag_services import generate_answer
 
@@ -101,7 +103,7 @@ async def create_session(
 async def save_message(
     db: AsyncSession,
     session_id: str,
-    role: RoleEnum,
+    role: MsgRoleEnum,
     content: str,
 ) -> Message:
     """
@@ -218,7 +220,7 @@ async def process_chat(
     6. Commit everything in one transaction and return the assistant Message.
     """
     # Step 1: persist the user's message
-    await save_message(db, session_id, RoleEnum.USER, user_message)
+    await save_message(db, session_id, MsgRoleEnum.USER, user_message)
 
     # Step 2: load history (now includes the user message we just saved)
     history = await get_recent_messages(db, session_id)
@@ -232,7 +234,7 @@ async def process_chat(
     )
 
     # Step 4: persist the assistant's reply
-    assistant_msg = await save_message(db, session_id, RoleEnum.ASSISTANT, answer_text)
+    assistant_msg = await save_message(db, session_id, MsgRoleEnum.ASSISTANT, answer_text)
 
     # Step 5: keep session's `updated_at` current
     await update_session_timestamp(db, session_id)
@@ -241,3 +243,44 @@ async def process_chat(
     await db.commit()
 
     return assistant_msg
+
+async def get_sessions(
+    db: AsyncSession,
+    user_id: int
+):
+    # Get user session 
+    result = await db.execute(
+        select(ChatSession)
+        .options(selectinload(ChatSession.user))
+        .where(ChatSession.user_id == user_id)
+        .order_by(desc(ChatSession.updated_at))
+    )
+    
+    sessions = result.scalars().all()
+    
+    return sessions
+
+async def delete_session(
+    db: AsyncSession,
+    user_id: int,
+    session_id: str
+):
+    result = await db.execute(
+        select(ChatSession)
+        .where(ChatSession.id == session_id)
+    )
+    session = result.scalars().first()
+    if not session:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Session not found",
+        )
+
+    if session.user_id != user_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to delete this session"
+        )
+
+    await db.delete(session)
+    await db.commit()

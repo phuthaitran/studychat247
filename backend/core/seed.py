@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 # ── Default admin credentials ─────────────────────────────────────────────────
 _ADMIN_USERNAME = "admin"
-_ADMIN_EMAIL = "admin@google.com"
+_ADMIN_EMAIL = "admin@gmail.com"
 _ADMIN_PASSWORD = "admin"
 
 
