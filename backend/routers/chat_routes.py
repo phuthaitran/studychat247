@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core.database import get_db
 from schemas.chat_schema import ChatRequest, AskResponse, MessageOut, SessionResponse
 from services.auth import CurrentUser
-from services.chat_services import create_session, process_chat, get_sessions, delete_session
+from services.chat_services import create_session, process_chat, get_sessions, show_messages, delete_session
 
 router = APIRouter()
 
@@ -103,3 +103,16 @@ async def delete_user_session(
     session_id: str
 ):
     await delete_session(db, current_user.id, session_id)
+    
+@router.get(
+    "/sessions/{session_id}/messages",
+    response_model=list[MessageOut],
+    status_code=status.HTTP_200_OK
+)
+async def get_session_messages(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: CurrentUser,
+    session_id: str
+) -> list[MessageOut]:
+    messages = await show_messages(db, current_user.id, session_id)
+    return messages
