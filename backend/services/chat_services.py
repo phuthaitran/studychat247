@@ -33,7 +33,7 @@ import uuid
 import tiktoken
 from fastapi import HTTPException, status
 from datetime import datetime, UTC
-from sqlalchemy import select, desc, func, update
+from sqlalchemy import select, desc, asc, func, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -310,6 +310,7 @@ async def show_messages(
     result = await db.execute(
         select(Message)
         .where(Message.session_id == session_id)
+        .order_by(asc(Message.sequence_number))
     )
     messages = result.scalars().all()
     return messages
