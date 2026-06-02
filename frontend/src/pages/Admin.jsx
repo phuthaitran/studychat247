@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { IoClose } from "react-icons/io5";
 import "./Admin.css"
-
 import { LuGraduationCap } from "react-icons/lu";
+import ConfirmModal from "../components/ConfirmModal";
+import UserForm from "../components/UserForm";
 
 // Mock user list for admin view
 const mockUsers = [
@@ -28,6 +28,8 @@ const mockUsers = [
 
 const Admin = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const [isFormOpen, setIsFormOpen] = useState(false)
+  const [selectedUser, setSelectedUser] = useState(null)
   return (
     <>
       <div className="dashboard-header">
@@ -37,27 +39,17 @@ const Admin = () => {
           </div>
           <span className="dashboard-header__logo--text">StudyChat247 ADMIN PANEL</span>
         </div>
-        <button className="danger-button" onClick={() => setIsOpen(true)}>Log out</button>
-        {isOpen && (
-          <div onClick={() => setIsOpen(false)} className="logout-modal">
-            <div
-              onClick={(e) => e.stopPropagation()}
-              className="logout-modal__bg"
-            >
-              <div className="modal-prompt">
-                <h2 className="modal-header">Log out</h2>
-                <p className="modal-info">Are you sure you want to log out?</p>
-              </div>
-              <div className="modal-selection">
-                <button className="danger-button">Log out</button>
-                <button className="cancel-button" onClick={() => setIsOpen(false)}>Cancel</button>
-              </div>
-              <div className="close-button">
-                <IoClose onClick={() => setIsOpen(false)} size={30} />
-              </div>
-            </div>
-          </div>
-        )}
+        <button className="dashboard-header__logout" onClick={() => setIsOpen(true)}>Log out</button>
+        {/* Logout modal */}
+        <ConfirmModal
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          onConfirm={() => setIsOpen(false)}
+          title="Log out"
+          message="Are you sure you want to log out?"
+          confirmLabel="Log out"
+          cancelLabel="Cancel"
+        />
       </div>
 
       <div className="dashboard-textbooks">
@@ -70,7 +62,18 @@ const Admin = () => {
       <div className="user-management">
         <div className="user-management-header">
           <h1>User Management: </h1>
-          <button><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg> Add Account</button>
+          <button className="add-user-button" onClick={() => setIsFormOpen(true)}>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
+            Add Account
+          </button>
+          <UserForm
+            isOpen={isFormOpen}
+            onClose={() => setIsFormOpen(false)}
+            onConfirm={() => setIsFormOpen(false)}
+            title="Add user"
+            confirmLabel="Create user"
+            cancelLabel="Cancel"
+          />
         </div>
 
         {/* User list section with action buttons */}
@@ -95,7 +98,17 @@ const Admin = () => {
                 </td>
                 <td className="action-cell">
                   <button className="btn-edit">Edit</button>
-                  <button className="btn-delete">Delete</button>
+                  <button className="btn-delete" onClick={() => setSelectedUser(user)}>Delete</button>
+                  {/* User delete confirm modal */}
+                  <ConfirmModal
+                    isOpen={selectedUser?.id === user.id}
+                    onClose={() => setSelectedUser(null)}
+                    onConfirm={() => setSelectedUser(null)}
+                    title="Delete user"
+                    message={`Are you sure you want to delete "${selectedUser?.username}"?`}
+                    confirmLabel="Delete"
+                    cancelLabel="Cancel"
+                  />
                 </td>
               </tr>
             ))}

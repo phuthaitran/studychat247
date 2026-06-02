@@ -1,0 +1,59 @@
+.user-form-modal {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    min-height: 100vh;
+    background-color: rgb(0 0 0 / 0.5);
+}
+
+.user-form-modal__bg {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 50vw;
+    position: relative;
+}
+
+.user-form-modal__title {
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.user-form-modal__input {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 12px;
+}
+
+.user-form-modal__input input {
+    width: 100%;
+    padding: 12px;
+    background: #eee;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #333;
+}
+
+.user-form-modal__input select {
+    border: 0.5px solid black;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 12px 4px;
+}
+
+.user-form-modal__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
