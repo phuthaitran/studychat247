@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import './LoginSignup.css'
 
 import { LuGraduationCap } from "react-icons/lu";
+import { IoMdMail, IoMdKey, IoMdPerson } from "react-icons/io";
 
 const LoginSignup = () => {
 
@@ -17,10 +18,22 @@ const LoginSignup = () => {
       </div>
       {activeForm === 'login' && (
         <div className="form-box active">
-          <form className="form-box__input">
+          <form className="form-box__inputs">
             <h2>Login</h2>
-            <input type="email" name="email" placeholder="Email" required />
-            <input type="password" name="password" placeholder="Password" required />
+            <div className="form-box__input">
+              <div className="form-box__icon">
+                <IoMdMail />
+              </div>
+              <input type="email" name="email" placeholder="Email" required />
+            </div>
+            <div className="form-box__input">
+              <div className="form-box__icon">
+                <IoMdKey />
+              </div>
+              <input type="password" name="password" placeholder="Password" required />
+            </div>
+
+
             <button type="submit" name="login">Login</button>
             <p>Don't have an account? <a href="#" onClick={() => setActiveForm('register')}>Register</a></p>
           </form>
@@ -29,11 +42,20 @@ const LoginSignup = () => {
 
       {activeForm === 'register' && (
         <div className="form-box active">
-          <form className="form-box__input">
+          <form className="form-box__inputs">
             <h2>Register</h2>
-            <input type="username" name="username" placeholder="Username" required />
-            <input type="email" name="email" placeholder="Email" required />
-            <input type="password" name="password" placeholder="Password" required />
+            <div className="form-box__input">
+              <div className="form-box__icon"><IoMdPerson /></div>
+              <input type="username" name="username" placeholder="Username" required />
+            </div>
+            <div className="form-box__input">
+              <div className="form-box__icon"><IoMdMail /></div>
+              <input type="email" name="email" placeholder="Email" required />
+            </div>
+            <div className="form-box__input">
+              <div className="form-box__icon"><IoMdKey /></div>
+              <input type="password" name="password" placeholder="Password" required />
+            </div>
             <button type="submit" name="login">Login</button>
             <p>Already have an account? <a href="#" onClick={() => setActiveForm('login')}>Login</a></p>
           </form>
