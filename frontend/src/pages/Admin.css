@@ -13,21 +13,34 @@
 }
 
 .dashboard-header__logo--icon {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     border-radius: 8px;
     background: #D85A30;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 500;
 }
 
 .dashboard-header__logo--text {
     font-size: 15px;
     font-weight: 500;
+}
+
+.dashboard-header__right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.dashboard-header__right span {
+    font-size: 16px;
+    font-weight: 600;
 }
 
 .dashboard-textbooks {

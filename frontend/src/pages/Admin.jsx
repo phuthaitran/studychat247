@@ -28,7 +28,7 @@ const mockUsers = [
 ]
 
 const Admin = () => {
-  const { logout } = useAppContext();
+  const { logout, user } = useAppContext();
   const [isOpen, setIsOpen] = useState(false)
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [selectedUser, setSelectedUser] = useState(null)
@@ -46,7 +46,11 @@ const Admin = () => {
           </div>
           <span className="dashboard-header__logo--text">StudyChat247 ADMIN PANEL</span>
         </div>
-        <button className="dashboard-header__logout" onClick={() => setIsOpen(true)}>Log out</button>
+        <div className="dashboard-header__right">
+          <span>Xin chào, {user.username}</span>
+          <button className="dashboard-header__logout" onClick={() => setIsOpen(true)}>Log out</button>
+        </div>
+
         {/* Logout modal */}
         <ConfirmModal
           isOpen={isOpen}

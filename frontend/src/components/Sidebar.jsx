@@ -56,7 +56,8 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
       {/* User Account */}
       <div className='flex items-center gap-3 p-3 mt-auto mx-4 mb-4 border border-gray-300 rounded-md cursor-pointer group shrink-0'>
         <img src={assets.user_icon} className='w-7 rounded-full' alt="" />
-        <p className='flex-1 text-sm truncate'>{user ? user.name : 'Đăng nhập tài khoản của bạn'}</p>
+        {/* Username section */}
+        <p className='flex-1 text-sm truncate'>{user ? user.username : 'Sign in to your account'}</p>
         {user && <LuEllipsisVertical className='h-6 cursor-pointer group-hover:block hover:bg-gray-100' onClick={() => setOpenMenu((prev) => !prev)} />}
         {openMenu && <DropdownProfile />}
       </div>
