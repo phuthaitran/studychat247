@@ -44,7 +44,7 @@ const Admin = () => {
         <ConfirmModal
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
-          onConfirm={() => setIsOpen(false)}
+          onConfirm={() => setIsOpen(false)}  // Temporary, this is where we'll call function that handle logout 
           title="Log out"
           message="Are you sure you want to log out?"
           confirmLabel="Log out"

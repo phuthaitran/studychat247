@@ -15,6 +15,7 @@ const App = () => {
   return (
     <>
       <div className='home'>
+        {/* Home page to chat with AI */}
         <Routes>
           <Route path='*' element={
             <div className='home__nav'>
@@ -24,8 +25,9 @@ const App = () => {
               </Routes>
             </div>
           } />
-
+          {/* Login & Signup page */}
           <Route path='/login' element={<LoginSignup />} />
+          {/* Admin page */}
           <Route path='/admin' element={<Admin />} />
         </Routes>
       </div>

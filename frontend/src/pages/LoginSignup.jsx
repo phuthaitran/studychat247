@@ -18,8 +18,10 @@ const LoginSignup = () => {
       </div>
       {activeForm === 'login' && (
         <div className="form-box active">
+          {/* Or display error message if we cannot do that inside the form */}
           <form className="form-box__inputs">
             <h2>Login</h2>
+            {/* Display error message here (priority) */}
             <div className="form-box__input">
               <div className="form-box__icon">
                 <IoMdMail />
@@ -36,14 +38,17 @@ const LoginSignup = () => {
 
             <button type="submit" name="login">Login</button>
             <p>Don't have an account? <a href="#" onClick={() => setActiveForm('register')}>Register</a></p>
+
           </form>
         </div>
       )}
 
       {activeForm === 'register' && (
         <div className="form-box active">
+          {/* Or display error message if we cannot do that inside the form */}
           <form className="form-box__inputs">
             <h2>Register</h2>
+            {/* Display error message here (priority) */}
             <div className="form-box__input">
               <div className="form-box__icon"><IoMdPerson /></div>
               <input type="username" name="username" placeholder="Username" required />
@@ -54,9 +59,9 @@ const LoginSignup = () => {
             </div>
             <div className="form-box__input">
               <div className="form-box__icon"><IoMdKey /></div>
-              <input type="password" name="password" placeholder="Password" required />
+              <input type="password" name="password" placeholder="Password (at least 8 characters)" required />
             </div>
-            <button type="submit" name="login">Login</button>
+            <button type="submit" name="register" onClick={() => setIsFormOpen(true)}>Register</button>
             <p>Already have an account? <a href="#" onClick={() => setActiveForm('login')}>Login</a></p>
           </form>
         </div>
