@@ -25,6 +25,18 @@ async def get_current_user(current_user: CurrentUser):
     """Get the currently authenticated user (roles already loaded by CurrentUser dependency)."""
     return current_user
 
+# return users list (for Admin page)
+@router.get("/users", response_model=list[UserPrivate])
+async def get_users(db: Annotated[AsyncSession, Depends(get_db)]):
+    result = await db.execute(
+        select(user.User)
+        .options(_user_with_roles())
+    )
+
+    users = result.scalars().all()
+
+    return users
+
 
 @router.get("/{user_id}", response_model=UserPublic)
 async def get_user(user_id: int, db: Annotated[AsyncSession, Depends(get_db)]):
