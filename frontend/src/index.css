@@ -21,3 +21,18 @@ body {
 .reset-tw :not(pre):not(code) {
   all: revert
 }
+/* -- Auth loading spinner ----------------------------------------------------- */
+.auth-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #d4c4a8;
+  border-top-color: #82735a;
+  border-radius: 50%;
+  animation: auth-spin 0.75s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes auth-spin {
+  to { transform: rotate(360deg); }
+}

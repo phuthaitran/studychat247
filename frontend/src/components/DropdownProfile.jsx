@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import "./Sidebar.css"
 import ConfirmModal from "./ConfirmModal";
+import { useAppContext } from "../context/AppContext";
 
 const DropdownProfile = () => {
+  const { logout } = useAppContext();
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+
+  const handleLogout = async () => {
+    setIsLogoutOpen(false);
+    await logout(); // Calls API, clears state, navigates to /login
+  };
 
   return (
     <div className="flex flex-col dropdown-profile">
@@ -15,15 +22,14 @@ const DropdownProfile = () => {
       <ConfirmModal
         isOpen={isLogoutOpen}
         onClose={() => setIsLogoutOpen(false)}
-        onConfirm={() => setIsLogoutOpen(false)}  // Temporary, this is where we'll call function that handle logout 
+        onConfirm={handleLogout}
         title="Log out"
         message="Are you sure you want to log out?"
         confirmLabel="Log out"
         cancelLabel="Cancel"
       />
     </div>
-
-  )
-}
+  );
+};
 
 export default DropdownProfile;

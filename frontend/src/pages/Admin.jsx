@@ -3,6 +3,7 @@ import "./Admin.css"
 import { LuGraduationCap } from "react-icons/lu";
 import ConfirmModal from "../components/ConfirmModal";
 import UserForm from "../components/UserForm";
+import { useAppContext } from "../context/AppContext";
 
 // Mock user list for admin view
 const mockUsers = [
@@ -27,9 +28,15 @@ const mockUsers = [
 ]
 
 const Admin = () => {
+  const { logout } = useAppContext();
   const [isOpen, setIsOpen] = useState(false)
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [selectedUser, setSelectedUser] = useState(null)
+
+  const handleLogout = async () => {
+    setIsOpen(false);
+    await logout();
+  };
   return (
     <>
       <div className="dashboard-header">
@@ -44,7 +51,7 @@ const Admin = () => {
         <ConfirmModal
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
-          onConfirm={() => setIsOpen(false)}  // Temporary, this is where we'll call function that handle logout 
+          onConfirm={handleLogout}
           title="Log out"
           message="Are you sure you want to log out?"
           confirmLabel="Log out"

@@ -111,3 +111,21 @@
 .form-box__inputs p a:hover {
     text-decoration: underline;
 }
+/* Error message below form heading */
+.form-error {
+  color: #c0392b;
+  background: #fdf0ef;
+  border: 1px solid #f5c6c2;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13.5px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+/* Disabled button state */
+.form-box__inputs button:disabled {
+  background: #c49070;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
