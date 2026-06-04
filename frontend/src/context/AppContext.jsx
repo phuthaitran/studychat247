@@ -1,9 +1,14 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser, logoutUser, refreshToken } from "../api/authApi";
+import { getSessions, getSession, deleteSession as deleteSessionApi } from "../api/chatApi";
 import tokenStore from "../api/tokenStore";
 
 const AppContext = createContext();
+
+// ── Topbar defaults ───────────────────────────────────────────────────────────
+const DEFAULT_SUBJECT = 'math';
+const DEFAULT_GRADE = 10;
 
 export const AppContextProvider = ({ children }) => {
     const navigate = useNavigate();
@@ -16,9 +21,33 @@ export const AppContextProvider = ({ children }) => {
     // Prevents a flash-redirect to /login before we know if the user is logged in.
     const [authLoading, setAuthLoading] = useState(true);
 
-    // ── Chat state ────────────────────────────────────────────────────────────
-    const [chats, setChats] = useState([]);
-    const [selectedChat, setSelectedChat] = useState(null);
+    // ── Session list state (sidebar) ──────────────────────────────────────────
+    // List of SessionResponse objects from GET /api/chat/sessions
+    const [sessions, setSessions] = useState([]);
+
+    // ── Active session state ──────────────────────────────────────────────────
+    // UUID string of the currently open session, or null for a new / empty chat
+    const [currentSessionId, setCurrentSessionId] = useState(null);
+
+    // Full SessionMessageResponse (id, title, subject, grade, messages[]) for
+    // the open session. null when no session is selected.
+    const [currentSession, setCurrentSession] = useState(null);
+
+    // True while GET /api/chat/sessions/:id is in-flight
+    const [sessionLoading, setSessionLoading] = useState(false);
+
+    // ── Topbar selection (free-pick for new chats) ────────────────────────────
+    // When a session is active these are irrelevant — sessionSubject/Grade are
+    // read from currentSession instead. When starting a new chat these are the
+    // values the user has selected in the Topbar dropdowns.
+    const [topbarSubject, setTopbarSubject] = useState(DEFAULT_SUBJECT);
+    const [topbarGrade, setTopbarGrade] = useState(DEFAULT_GRADE);
+
+    // ── Derived: locked subject/grade for the active session ──────────────────
+    // Convenience getters: returns the session's subject/grade when a session is
+    // open, otherwise the current Topbar selection.
+    const sessionSubject = currentSession?.subject ?? null;
+    const sessionGrade = currentSession?.grade ?? null;
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
@@ -33,14 +62,17 @@ export const AppContextProvider = ({ children }) => {
     }, []);
 
     /**
-     * Clear all auth state (called on logout or when refresh fails).
+     * Clear all auth and chat state (called on logout or when refresh fails).
      */
     const clearAuth = useCallback(() => {
         tokenStore.token = null;
         setAccessToken(null);
         setUser(null);
-        setChats([]);
-        setSelectedChat(null);
+        setSessions([]);
+        setCurrentSessionId(null);
+        setCurrentSession(null);
+        setTopbarSubject(DEFAULT_SUBJECT);
+        setTopbarGrade(DEFAULT_GRADE);
     }, []);
 
     /**
@@ -72,6 +104,65 @@ export const AppContextProvider = ({ children }) => {
         }
     }, [clearAuth, navigate]);
 
+    // ── Chat helpers ──────────────────────────────────────────────────────────
+
+    /**
+     * Load (or reload) the sidebar session list from the API.
+     * Called on login and after creating/deleting sessions.
+     */
+    const fetchSessions = useCallback(async () => {
+        try {
+            const data = await getSessions();
+            setSessions(data);
+        } catch {
+            // Silently ignore — user stays on the current session
+        }
+    }, []);
+
+    /**
+     * Open a session: fetch its messages, lock subject/grade, scroll to bottom.
+     * Sets sessionLoading = true while in-flight so ChatBox can show a spinner.
+     */
+    const selectSession = useCallback(async (sessionId) => {
+        setSessionLoading(true);
+        setCurrentSession(null);
+        setCurrentSessionId(sessionId);
+        try {
+            const data = await getSession(sessionId);
+            setCurrentSession(data);
+        } catch {
+            // If the fetch fails reset to empty state
+            setCurrentSessionId(null);
+        } finally {
+            setSessionLoading(false);
+        }
+    }, []);
+
+    /**
+     * Reset to a blank new-chat state:
+     * - Clear the active session
+     * - Reset Topbar dropdowns to defaults
+     */
+    const startNewChat = useCallback(() => {
+        setCurrentSessionId(null);
+        setCurrentSession(null);
+        setTopbarSubject(DEFAULT_SUBJECT);
+        setTopbarGrade(DEFAULT_GRADE);
+    }, []);
+
+    /**
+     * Delete a session by ID.
+     * - Removes it from the sidebar list.
+     * - If it was the active session, resets to empty-chat state.
+     */
+    const removeSession = useCallback(async (sessionId) => {
+        await deleteSessionApi(sessionId);
+        setSessions((prev) => prev.filter((s) => s.id !== sessionId));
+        if (currentSessionId === sessionId) {
+            startNewChat();
+        }
+    }, [currentSessionId, startNewChat]);
+
     // ── Startup: try to restore session from the refresh token cookie ─────────
     useEffect(() => {
         const initAuth = async () => {
@@ -93,14 +184,16 @@ export const AppContextProvider = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []); // Run once on mount only
 
-    // ── Chat side effects ─────────────────────────────────────────────────────
+    // ── Fetch sessions when user logs in ──────────────────────────────────────
     useEffect(() => {
-        if (!user) {
-            setChats([]);
-            setSelectedChat(null);
+        if (user) {
+            fetchSessions();
+        } else {
+            setSessions([]);
+            setCurrentSessionId(null);
+            setCurrentSession(null);
         }
-        // TODO: fetch real chats when chat API is ready
-    }, [user]);
+    }, [user, fetchSessions]);
 
     // ── Context value ─────────────────────────────────────────────────────────
     const value = {
@@ -113,11 +206,30 @@ export const AppContextProvider = ({ children }) => {
         logout,
         authLoading,
 
-        // Chat
-        chats,
-        setChats,
-        selectedChat,
-        setSelectedChat,
+        // Session list (sidebar)
+        sessions,
+        setSessions,
+        fetchSessions,
+
+        // Active session
+        currentSessionId,
+        setCurrentSessionId,
+        currentSession,
+        setCurrentSession,
+        sessionLoading,
+        selectSession,
+        startNewChat,
+        removeSession,
+
+        // Derived subject/grade for the active session (null = no active session)
+        sessionSubject,
+        sessionGrade,
+
+        // Topbar free-pick (used only when currentSession === null)
+        topbarSubject,
+        setTopbarSubject,
+        topbarGrade,
+        setTopbarGrade,
 
         // Navigation
         navigate,
