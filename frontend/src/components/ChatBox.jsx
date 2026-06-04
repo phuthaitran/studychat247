@@ -31,6 +31,7 @@ const ChatBox = ({ setIsSidebarOpen }) => {
       <div className='flex-1 flex flex-col justify-between m-5 md:m-10 xl:mx-30 max-md:mt-14 overflow-hidden'>
         {/* Chat Messages */}
         <div className='flex-1 mb-5 overflow-y-scroll'>
+          {/* Empty chat state */}
           {messages.length === 0 && (
             <div className='flex flex-col items-center justify-center h-full'>
               <div className='w-24 h-24 rounded-2xl bg-[#D85A30] flex items-center justify-center mb-4'>
@@ -40,7 +41,7 @@ const ChatBox = ({ setIsSidebarOpen }) => {
               <p className='text-gray-500'>Hãy bắt đầu cuộc trò chuyện của bạn</p>
             </div>
           )}
-
+          {/* Message bubble */}
           {messages.map((message, index) => (
             <Message key={index} message={message} />
           ))}

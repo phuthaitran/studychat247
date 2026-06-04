@@ -5,9 +5,9 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.database import get_db
-from schemas.chat_schema import ChatRequest, AskResponse, MessageOut, SessionResponse
+from schemas.chat_schema import ChatRequest, AskResponse, MessageOut, SessionResponse, SessionMessageResponse
 from services.auth import CurrentUser
-from services.chat_services import create_session, process_chat, get_sessions, show_messages, delete_session
+from services.chat_services import create_session, process_chat, get_sessions, show_messages, delete_session, get_session_with_msg
 
 router = APIRouter()
 
@@ -103,7 +103,8 @@ async def delete_user_session(
     session_id: str
 ):
     await delete_session(db, current_user.id, session_id)
-    
+
+# OBSOLETE - Will be removed    
 @router.get(
     "/sessions/{session_id}/messages",
     response_model=list[MessageOut],
@@ -116,3 +117,25 @@ async def get_session_messages(
 ) -> list[MessageOut]:
     messages = await show_messages(db, current_user.id, session_id)
     return messages
+
+@router.get(
+    "/sessions/{session_id}",
+    response_model=SessionMessageResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Get message of a session"
+)
+async def get_selected_session(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: CurrentUser,
+    session_id: str
+):
+    session, messages = await get_session_with_msg(db, current_user.id, session_id)
+    return SessionMessageResponse(
+        id=session.id,
+        title=session.title,
+        subject=session.subject,
+        grade=session.grade,
+        created_at=session.created_at,
+        updated_at=session.updated_at,
+        messages=messages
+    )

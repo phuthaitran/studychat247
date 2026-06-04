@@ -244,6 +244,8 @@ async def process_chat(
 
     return assistant_msg
 
+# -----------------------------------------------------------------------------
+# Sessions-related controllers
 async def get_sessions(
     db: AsyncSession,
     user_id: int
@@ -314,3 +316,33 @@ async def show_messages(
     )
     messages = result.scalars().all()
     return messages
+
+async def get_session_with_msg(
+    db: AsyncSession,
+    user_id: int,
+    session_id: str
+):
+    result = await db.execute(
+        select(ChatSession)
+        .where(ChatSession.id == session_id)
+    )
+    session = result.scalars().first()
+    if not session:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Session not found",
+        )
+
+    if session.user_id != user_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to view this session"
+        )
+
+    result = await db.execute(
+        select(Message)
+        .where(Message.session_id == session_id)
+        .order_by(asc(Message.sequence_number))
+    )
+    messages = result.scalars().all()
+    return session, messages

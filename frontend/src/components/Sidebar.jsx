@@ -46,6 +46,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                     </p>
                     <p className='text-xs text-gray-500'>{moment(chat.updatedAt).fromNow()}</p>
                   </div>
+                  {/* Bin icon to delete session */}
                   <img src={assets.bin_icon} className='w-4 cursor-pointer invert'></img>
                 </div>
               ))

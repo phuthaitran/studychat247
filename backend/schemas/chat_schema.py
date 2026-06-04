@@ -51,3 +51,6 @@ class SessionResponse(BaseModel):
     grade: int
     created_at: datetime
     updated_at: datetime
+
+class SessionMessageResponse(SessionResponse):
+    messages: list[MessageOut]
