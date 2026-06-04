@@ -18,7 +18,7 @@ body {
   display: none;
 }
 
-.reset-tw :not(pre):not(code) {
+.reset-tw :not(pre):not(code):not(.katex):not(.katex *) {
   all: revert
 }
 /* -- Auth loading spinner ----------------------------------------------------- */

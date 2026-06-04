@@ -126,7 +126,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         <img src={assets.user_icon} className='w-7 rounded-full' alt="" />
         {/* Username section */}
         <p className='flex-1 text-sm truncate'>{user ? user.username : 'Sign in to your account'}</p>
-        {user && <LuEllipsisVertical className='h-6 cursor-pointer group-hover:block hover:bg-gray-100' onClick={() => setOpenMenu((prev) => !prev)} />}
+        {user && <LuEllipsisVertical size={"24px"} className='ml-2 p-1 rounded cursor-pointer group-hover:block hover:bg-gray-100' onClick={() => setOpenMenu((prev) => !prev)} />}
         {openMenu && <DropdownProfile />}
       </div>
 

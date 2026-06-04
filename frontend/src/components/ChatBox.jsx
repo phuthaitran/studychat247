@@ -23,8 +23,10 @@ const ChatBox = ({ setIsSidebarOpen }) => {
   const [prompt, setPrompt] = useState('');
   const [messages, setMessages] = useState([]);
 
-  // Ref to the invisible div at the bottom for auto-scroll
-  const bottomRef = useRef(null);
+  // Ref to the scrollable messages container — used for controlled auto-scroll.
+  // scrollTop = scrollHeight keeps scrolling strictly inside this div and does
+  // NOT bubble up to scroll the page (unlike scrollIntoView).
+  const messagesContainerRef = useRef(null);
 
   // Always reflects the *current* value of currentSessionId.
   // Used inside async callbacks to avoid stale closure reads.
@@ -50,9 +52,13 @@ const ChatBox = ({ setIsSidebarOpen }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentSession?.id]);
 
-  // Auto-scroll to the bottom whenever the message list grows
+  // Auto-scroll to bottom whenever the message list grows.
+  // Uses the container ref directly — avoids scrollIntoView() which would
+  // scroll every scrollable ancestor (including <body>), causing the whole
+  // page to jump down whenever KaTeX re-renders math equations.
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const el = messagesContainerRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
   }, [messages]);
 
   const onSubmit = async (e) => {
@@ -138,7 +144,7 @@ const ChatBox = ({ setIsSidebarOpen }) => {
       <div className='flex-1 flex flex-col justify-between m-5 md:m-10 xl:mx-30 max-md:mt-14 overflow-hidden'>
 
         {/* ── Messages area ─────────────────────────────────────────── */}
-        <div className='flex-1 mb-5 overflow-y-scroll'>
+        <div ref={messagesContainerRef} className='flex-1 mb-5 overflow-y-scroll'>
 
           {/* Session loading spinner */}
           {sessionLoading && (
@@ -171,8 +177,6 @@ const ChatBox = ({ setIsSidebarOpen }) => {
             </div>
           )}
 
-          {/* Invisible anchor for auto-scroll */}
-          <div ref={bottomRef} />
         </div>
 
         {/* ── Input form ────────────────────────────────────────────── */}
