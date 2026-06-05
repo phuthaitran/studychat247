@@ -1,43 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IoClose } from "react-icons/io5";
 import "./UserCreateForm.css"
 
 /**
- * UserCreateForm — Modal form for creating a new user account (admin use).
+ * UserEditAdminForm — Modal form for editing an existing user account (admin use).
  *
  * Props:
  * - isOpen        {boolean}   – Whether the modal is visible.
  * - onClose       {function}  – Called when the form is dismissed (resets state).
- * - onSubmit      {function}  – Called with { username, email, password, confirmPassword, role }
- *                               after local validation passes. The parent is responsible for
- *                               showing a confirmation modal before calling the API.
+ * - onSubmit      {function}  – Called with { username, email, role } after local validation passes.
+ *                               The parent is responsible for showing a confirmation modal before
+ *                               calling the API.
+ * - user          {object}    – The user being edited: { id, username, email, roles }.
+ *                               Used to pre-populate the form fields.
  * - title         {string}    – Modal heading.
  * - confirmLabel  {string}    – Label for the submit button.
  * - cancelLabel   {string}    – Label for the cancel button.
  * - apiError      {string}    – Error message returned from the API (shown below the form).
  */
-const UserCreateForm = ({
+const UserEditAdminForm = ({
   isOpen,
   onClose,
   onSubmit,
-  title = "Add User",
-  confirmLabel = "Create account",
+  user,
+  title = "Edit Profile",
+  confirmLabel = "Save changes",
   cancelLabel = "Cancel",
   apiError = "",
 }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState("user");
   const [error, setError] = useState("");
+
+  // Pre-fill form whenever the selected user changes
+  useEffect(() => {
+    if (user) {
+      setUsername(user.username ?? "");
+      setEmail(user.email ?? "");
+    }
+  }, [user]);
 
   const resetForm = () => {
     setUsername("");
     setEmail("");
-    setPassword("");
-    setConfirmPassword("");
-    setRole("user");
     setError("");
   };
 
@@ -50,20 +55,12 @@ const UserCreateForm = ({
     e.preventDefault();
     setError("");
 
-    if (!username || !email || !password || !confirmPassword) {
-      setError("Please fill in all fields.");
-      return;
-    }
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters.");
-      return;
-    }
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+    if (!username || !email) {
+      setError("Username and email are required.");
       return;
     }
 
-    onSubmit({ username, email, password, confirmPassword, role });
+    onSubmit({ username, email });
   };
 
   if (!isOpen) return null;
@@ -97,38 +94,6 @@ const UserCreateForm = ({
               required
             />
           </div>
-          <div className="user-form-modal__input">
-            <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <div className="user-form-modal__input">
-            <label>Confirm password</label>
-            <input
-              type="password"
-              name="confirm-password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
-          </div>
-          <div className="user-form-modal__input">
-            <label>Role</label>
-            <select
-              name="role"
-              id="role"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-            >
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-            </select>
-          </div>
 
           {/* Validation error or API error */}
           {(error || apiError) && (
@@ -148,4 +113,4 @@ const UserCreateForm = ({
   );
 };
 
-export default UserCreateForm;
+export default UserEditAdminForm;

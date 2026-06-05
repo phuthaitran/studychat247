@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import "./Sidebar.css"
 import ConfirmModal from "./ConfirmModal";
+import UserEditUserForm from "./UserEditAdminForm";
 import { useAppContext } from "../context/AppContext";
 
 const DropdownProfile = () => {
   const { logout } = useAppContext();
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false)
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -15,10 +17,11 @@ const DropdownProfile = () => {
   return (
     <div className="flex flex-col dropdown-profile">
       <ul className="flex flex-col gap-4">
-        <li className="hover:underline cursor-pointer">Edit Profile</li>
-        <li className="hover:underline cursor-pointer">Change Password</li>
+        <li className="hover:underline cursor-pointer" onClick={() => setIsEditProfileOpen(true)}>Edit Profile</li>
         <li className="text-red-500 hover:underline cursor-pointer" onClick={() => setIsLogoutOpen(true)}>Log out</li>
       </ul>
+      {/* Edit profile form, where it fetch info from current User */}
+
       {/* Logout modal */}
       <ConfirmModal
         isOpen={isLogoutOpen}

@@ -38,7 +38,7 @@ async def get_users(db: Annotated[AsyncSession, Depends(get_db)]):
     return users
 
 
-@router.get("/{user_id}", response_model=UserPublic)
+@router.get("/{user_id}", response_model=UserPrivate)
 async def get_user(user_id: int, db: Annotated[AsyncSession, Depends(get_db)]):
     result = await db.execute(
         select(user.User)
