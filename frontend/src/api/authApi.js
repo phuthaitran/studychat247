@@ -26,11 +26,12 @@ export const loginUser = async (email, password) => {
  * Register.
  * Backend defaults new accounts to the "user" role automatically.
  */
-export const registerUser = async (username, email, password) => {
+export const registerUser = async (username, email, password, confirm_password) => {
   const { data } = await axiosInstance.post('/auth/register', {
     username,
     email,
     password,
+    confirm_password,
     role: 'user', // Explicit, though backend defaults to this
   });
   return data;

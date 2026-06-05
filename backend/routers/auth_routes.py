@@ -33,6 +33,11 @@ router = APIRouter()
     status_code=status.HTTP_201_CREATED,
 )
 async def create_user(user_: UserCreate, db: Annotated[AsyncSession, Depends(get_db)]):
+    if user_.password != user_.confirm_password:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Passwords does not match"
+        )
     result = await db.execute(
         select(user.User).where(func.lower(user.User.username) == user_.username.lower()),
     )

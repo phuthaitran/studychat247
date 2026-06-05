@@ -142,6 +142,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         message='Bạn có chắc muốn xóa cuộc trò chuyện này không? Hành động này không thể hoàn tác.'
         confirmLabel={deleteLoading ? 'Đang xóa...' : 'Xóa'}
         cancelLabel='Hủy'
+        isDanger={true}
       />
     </div>
   )

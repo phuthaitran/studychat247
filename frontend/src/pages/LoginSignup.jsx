@@ -24,6 +24,7 @@ const LoginSignup = () => {
   const [regUsername, setRegUsername] = useState('');
   const [regEmail, setRegEmail] = useState('');
   const [regPassword, setRegPassword] = useState('');
+  const [regConfirmPassword, setRegConfirmPassword] = useState('')
 
   // ── Switch forms ──────────────────────────────────────────────────────────
   const switchToLogin = () => {
@@ -69,18 +70,23 @@ const LoginSignup = () => {
     setError('');
 
     // Client-side validation
-    if (!regUsername || !regEmail || !regPassword) {
+    if (!regUsername || !regEmail || !regPassword || !regConfirmPassword) {
       setError('Please fill in all fields.');
       return;
     }
-    if (regPassword.length < 8) {
+    if (regPassword.length < 8 || regConfirmPassword.length < 8) {
       setError('Password must be at least 8 characters.');
       return;
     }
 
+    if (regPassword !== regConfirmPassword) {
+      setError('Passwords does not match');
+      return
+    }
+
     setIsLoading(true);
     try {
-      await registerUser(regUsername, regEmail, regPassword);
+      await registerUser(regUsername, regEmail, regPassword, regConfirmPassword);
       toast.success('Account created! You can now log in.', {
         duration: 4000,
       });
@@ -88,6 +94,7 @@ const LoginSignup = () => {
       setRegUsername('');
       setRegEmail('');
       setRegPassword('');
+      setRegConfirmPassword('')
       switchToLogin();
     } catch (err) {
       const detail = err.response?.data?.detail;
@@ -193,6 +200,18 @@ const LoginSignup = () => {
                 placeholder="Password (at least 8 characters)"
                 value={regPassword}
                 onChange={(e) => setRegPassword(e.target.value)}
+                required
+                disabled={isLoading}
+              />
+            </div>
+            <div className="form-box__input">
+              <div className="form-box__icon"><IoMdKey /></div>
+              <input
+                type="password"
+                name="confirm-password"
+                placeholder="Confirm password"
+                value={regConfirmPassword}
+                onChange={(e) => setRegConfirmPassword(e.target.value)}
                 required
                 disabled={isLoading}
               />

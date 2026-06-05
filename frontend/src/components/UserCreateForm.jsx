@@ -1,6 +1,6 @@
 import React from "react";
 import { IoClose } from "react-icons/io5";
-import "./UserForm.css"
+import "./UserCreateForm.css"
 
 /* 
 Create a user form for an admin to add or edit user, with: 
@@ -16,7 +16,7 @@ Under that is two button:
 The modal include a close button on the top right (using IoClose as the icon)
 */
 
-const UserForm = ({
+const UserCreateForm = ({
   isOpen,
   onClose,
   onConfirm,
@@ -47,6 +47,10 @@ const UserForm = ({
             <input type="password" name="password" required />
           </div>
           <div className="user-form-modal__input">
+            <label>Confirm password</label>
+            <input type="password" name="confirm-password" required />
+          </div>
+          <div className="user-form-modal__input">
             <label>Role</label>
             <select name="role" id="role">
               <option value="user">User</option>
@@ -66,4 +70,4 @@ const UserForm = ({
   )
 }
 
-export default UserForm;
+export default UserCreateForm;

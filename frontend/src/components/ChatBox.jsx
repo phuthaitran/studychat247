@@ -49,7 +49,7 @@ const ChatBox = ({ setIsSidebarOpen }) => {
       setMessages([]);
     }
     setLoading(false);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentSession?.id]);
 
   // Auto-scroll to bottom whenever the message list grows.
@@ -141,7 +141,7 @@ const ChatBox = ({ setIsSidebarOpen }) => {
       {/* Topbar */}
       <Topbar setIsSidebarOpen={setIsSidebarOpen} />
 
-      <div className='flex-1 flex flex-col justify-between m-5 md:m-10 xl:mx-30 max-md:mt-14 overflow-hidden'>
+      <div className='flex-1 flex flex-col justify-between m-5 md:m-6 xl:mx-30 max-md:mt-14 overflow-hidden'>
 
         {/* ── Messages area ─────────────────────────────────────────── */}
         <div ref={messagesContainerRef} className='flex-1 mb-5 overflow-y-scroll'>

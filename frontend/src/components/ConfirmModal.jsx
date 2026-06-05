@@ -22,6 +22,7 @@ const ConfirmModal = ({
   message = "Are you sure?",
   confirmLabel = "Confirm",
   cancelLabel = "Cancel",
+  isDanger = false    // Only set to true for logout and delete operations
 }) => {
   if (!isOpen) return null;
 
@@ -36,7 +37,7 @@ const ConfirmModal = ({
           <p className="modal-info">{message}</p>
         </div>
         <div className="modal-selection">
-          <button className="danger-button" onClick={onConfirm}>
+          <button className={isDanger ? "danger-button" : "confirm-button"} onClick={onConfirm}>
             {confirmLabel}
           </button>
           <button className="cancel-button" onClick={onClose}>

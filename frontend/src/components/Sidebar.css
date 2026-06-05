@@ -59,10 +59,10 @@
 }
 
 .dropdown-profile {
+  left: 8rem;
   position: absolute;
   bottom: 5rem;
-  left: 8rem;
-  width: 150px;
+  width: max-content;
   padding: 12px;
   border-radius: 6px;
   background-color: white;

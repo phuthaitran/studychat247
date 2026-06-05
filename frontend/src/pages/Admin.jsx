@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./Admin.css"
 import { LuGraduationCap } from "react-icons/lu";
 import ConfirmModal from "../components/ConfirmModal";
-import UserForm from "../components/UserForm";
+import UserCreateForm from "../components/UserCreateForm";
 import { useAppContext } from "../context/AppContext";
 
 // Mock user list for admin view
@@ -60,6 +60,7 @@ const Admin = () => {
           message="Are you sure you want to log out?"
           confirmLabel="Log out"
           cancelLabel="Cancel"
+          isDanger={true}
         />
       </div>
 
@@ -77,7 +78,7 @@ const Admin = () => {
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
             Add Account
           </button>
-          <UserForm
+          <UserCreateForm
             isOpen={isFormOpen}
             onClose={() => setIsFormOpen(false)}
             onConfirm={() => setIsFormOpen(false)}
@@ -119,6 +120,7 @@ const Admin = () => {
                     message={`Are you sure you want to delete "${selectedUser?.username}"?`}
                     confirmLabel="Delete"
                     cancelLabel="Cancel"
+                    isDanger={true}
                   />
                 </td>
               </tr>

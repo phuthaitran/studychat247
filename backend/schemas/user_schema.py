@@ -12,6 +12,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str = Field(min_length=8)
+    confirm_password: str = Field(min_length=8)
     role: RoleEnum = Field(default=RoleEnum.USER)
 
 class UserPublic(BaseModel):
