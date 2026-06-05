@@ -59,12 +59,13 @@
 }
 
 .dropdown-profile {
-  left: 8rem;
+  right: 0;
   position: absolute;
-  bottom: 5rem;
+  bottom: calc(100% + 8px);
   width: max-content;
   padding: 12px;
   border-radius: 6px;
   background-color: white;
   border: 1px solid gray;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
 }

@@ -122,7 +122,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
       </div>
 
       {/* User Account */}
-      <div className='flex items-center gap-3 p-3 mt-auto mx-4 mb-4 border border-gray-300 rounded-md cursor-pointer group shrink-0'>
+      <div className='relative flex items-center gap-3 p-3 mt-auto mx-4 mb-4 border border-gray-300 rounded-md cursor-pointer group shrink-0'>
         <img src={assets.user_icon} className='w-7 rounded-full' alt="" />
         {/* Username section */}
         <p className='flex-1 text-sm truncate'>{user ? user.username : 'Sign in to your account'}</p>
