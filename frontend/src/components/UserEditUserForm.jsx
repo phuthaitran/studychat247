@@ -3,22 +3,22 @@ import { IoClose } from "react-icons/io5";
 import "./UserCreateForm.css"
 
 /**
- * UserEditAdminForm — Modal form for editing an existing user account (admin use).
+ * UserEditUserForm — Modal form for editing an existing user account (user use).
  *
  * Props:
  * - isOpen        {boolean}   – Whether the modal is visible.
  * - onClose       {function}  – Called when the form is dismissed (resets state).
- * - onSubmit      {function}  – Called with { username, email, role } after local validation passes.
+ * - onSubmit      {function}  – Called with { username, email } after local validation passes.
  *                               The parent is responsible for showing a confirmation modal before
  *                               calling the API.
- * - user          {object}    – The user being edited: { id, username, email, roles }.
+ * - user          {object}    – The user being edited: { id, username, email }. (Fetch from CurrentUser)
  *                               Used to pre-populate the form fields.
  * - title         {string}    – Modal heading.
  * - confirmLabel  {string}    – Label for the submit button.
  * - cancelLabel   {string}    – Label for the cancel button.
  * - apiError      {string}    – Error message returned from the API (shown below the form).
  */
-const UserEditAdminForm = ({
+const UserEditUserForm = ({
   isOpen,
   onClose,
   onSubmit,
@@ -113,4 +113,4 @@ const UserEditAdminForm = ({
   );
 };
 
-export default UserEditAdminForm;
+export default UserEditUserForm;

@@ -18,7 +18,7 @@ import "./UserCreateForm.css"
  * - cancelLabel   {string}    – Label for the cancel button.
  * - apiError      {string}    – Error message returned from the API (shown below the form).
  */
-const UserEditUserForm = ({
+const UserEditAdminForm = ({
   isOpen,
   onClose,
   onSubmit,
@@ -128,4 +128,4 @@ const UserEditUserForm = ({
   );
 };
 
-export default UserEditUserForm;
+export default UserEditAdminForm;
