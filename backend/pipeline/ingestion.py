@@ -5,12 +5,10 @@ from dotenv import load_dotenv
 from langchain_community.document_loaders import DirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
-from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 from pipeline.document_title import title_injection
 
 load_dotenv()
-CHROMA_PATH = "vectorstore/chroma"
 DATA_PATH = "data/processed"
 MARKDOWN_SEPARATORS = [
     "\n#{1,6} ",
@@ -32,7 +30,9 @@ subjects = ["math", "history"]
 
 def main():
     start_time = datetime.now()
-    generate_data_store()
+    from services.rag_services import reingest_documents
+    chunks = prepare_chunks()
+    reingest_documents(chunks)
     end_time = datetime.now()
     print(f"Operation completed after {end_time - start_time}")
     
@@ -65,23 +65,16 @@ def split_text(documents: list[Document]):
     print(f"Split {len(documents)} documents into {len(chunks)} chunks.")
     return chunks
 
-def save_to_db(chunks: list[Document]):
-    if os.path.exists(CHROMA_PATH):
-        shutil.rmtree(CHROMA_PATH)
-        
-    vector_store = Chroma(
-        collection_name="textbooks",
-        embedding_function=embeddings,
-        persist_directory=CHROMA_PATH,
-        collection_metadata={"hnsw:space": "cosine"}
-    )
-    
-    vector_store.add_documents(documents=chunks)
-    print(f"Saved {len(chunks)} chunks to {CHROMA_PATH}")
+def prepare_chunks() -> list[Document]:
+    """Load, annotate, and split all documents. Returns chunks ready for ingestion.
 
-def generate_data_store():
+    This function does NOT write to the vector store. Persisting the chunks is
+    handled by `rag_services.reingest_documents()`, which reuses the already-open
+    chromadb client to avoid file-lock issues on Windows.
+    """
     doc_list = load_documents()
     print("Number of documents:", len(doc_list))
+
     for doc in doc_list:
         file_source = str(doc.metadata['source'])
         filename = os.path.split(file_source)[1]
@@ -96,7 +89,7 @@ def generate_data_store():
         print(doc.metadata)
 
     chunks = split_text(doc_list)
-    save_to_db(chunks)
+    return chunks
 
 if __name__ == '__main__':
     main()

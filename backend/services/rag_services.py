@@ -1,17 +1,18 @@
 """
 rag_services.py - RAG chain with async LangChain invocation.
 
-Key changes from the original:
-• `generate_answer` now uses `rag_chain.ainvoke()` instead of `invoke()`.
-  The synchronous `invoke()` would block the entire asyncio event loop for
-  the duration of the LLM + embedding calls, preventing FastAPI from serving
-  any other requests in the meantime.
-• The `history` placeholder now accepts an empty string ("") gracefully.
+Key design decisions:
+• `generate_answer` uses `rag_chain.ainvoke()` to avoid blocking the event loop.
+• `reingest_documents()` replaces all collection data WITHOUT closing the SQLite
+  file. It reuses the already-open chromadb client to delete and recreate the
+  "textbooks" collection in-place, which completely avoids [WinError 32] on
+  Windows (caused by shutil.rmtree on a file held open by this process).
 """
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
+from langchain_core.documents import Document
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough, RunnableLambda
 from langchain_core.output_parsers import StrOutputParser
@@ -21,6 +22,8 @@ import os
 load_dotenv()
 
 CHROMA_PATH = "vectorstore/chroma"
+COLLECTION_NAME = "textbooks"
+COLLECTION_METADATA = {"hnsw:space": "cosine"}
 
 TEMPLATE = """Bạn là một gia sư thông minh và thân thiện, chuyên hỗ trợ học sinh trung học phổ thông Việt Nam.
  
@@ -51,54 +54,63 @@ Nếu cần, hãy chia nhỏ câu trả lời thành các bước hoặc điểm
 """
 
 # --- Load embeddings and vector store ONCE at module level ---
-# This avoids reloading on every question.
 print("Loading embeddings model...")
 embeddings = HuggingFaceEmbeddings(model_name="keepitreal/vietnamese-sbert")
 
 print(f"Loading vector store from '{CHROMA_PATH}'...")
-_vector_store: Chroma | None = Chroma(
-    collection_name="textbooks",
-    collection_metadata={"hnsw:space": "cosine"},
+_vector_store: Chroma = Chroma(
+    collection_name=COLLECTION_NAME,
+    collection_metadata=COLLECTION_METADATA,
     embedding_function=embeddings,
     persist_directory=CHROMA_PATH,
 )
 print("Vector store loaded. Ready to answer questions.")
 
 
-def _get_vector_store() -> Chroma:
-    """Return the active Chroma instance, raising if it has been closed."""
-    if _vector_store is None:
-        raise RuntimeError("Vector store is not loaded. Call reload_vector_store() first.")
-    return _vector_store
+def reingest_documents(chunks: list[Document]) -> None:
+    """Replace all documents in the vector store without touching the file system.
 
+    Instead of closing the SQLite file, deleting the directory, and reopening
+    (which causes [WinError 32] on Windows because this process holds the file
+    open), we reuse the already-open chromadb client to:
+      1. Delete the existing collection (clears all embeddings/docs).
+      2. Recreate the collection fresh via get_or_create_collection.
+      3. Add the new document chunks.
 
-def close_vector_store() -> None:
-    """Release the Chroma client so its SQLite file lock is freed.
-
-    Call this BEFORE deleting / recreating the vectorstore directory during
-    ingestion, otherwise Windows raises [WinError 32] (file in use).
+    The SQLite file is never closed, so there is no file-lock conflict.
+    `_vector_store` keeps pointing to the same client; only the in-memory
+    collection reference is refreshed.
     """
     global _vector_store
-    if _vector_store is not None:
-        try:
-            _vector_store._client._system.stop()  # closes the SQLite connection
-        except Exception:
-            pass
-        _vector_store = None
-        print("Vector store closed and lock released.")
 
+    chroma_client = _vector_store._client  # the underlying chromadb PersistentClient
 
-def reload_vector_store() -> None:
-    """Re-open the Chroma client after ingestion has finished writing."""
-    global _vector_store
-    close_vector_store()  # ensure previous instance is cleaned up
+    # Step 1: Wipe the old collection via the DB API (no file ops needed).
+    print(f"Dropping collection '{COLLECTION_NAME}'...")
+    try:
+        chroma_client.delete_collection(COLLECTION_NAME)
+    except Exception as e:
+        print(f"Note: could not delete collection (may not exist yet): {e}")
+
+    # Step 2: Recreate the LangChain Chroma wrapper pointing at the same client.
+    # Passing client= reuses the open connection; persist_directory is not needed.
+    print(f"Recreating collection '{COLLECTION_NAME}'...")
     _vector_store = Chroma(
-        collection_name="textbooks",
-        collection_metadata={"hnsw:space": "cosine"},
+        client=chroma_client,
+        collection_name=COLLECTION_NAME,
+        collection_metadata=COLLECTION_METADATA,
         embedding_function=embeddings,
-        persist_directory=CHROMA_PATH,
     )
-    print("Vector store reloaded successfully.")
+
+    # Step 3: Add the new chunks.
+    print(f"Adding {len(chunks)} chunks to vector store...")
+    _vector_store.add_documents(documents=chunks)
+    print(f"Ingestion complete: {len(chunks)} chunks saved.")
+
+
+def _get_vector_store() -> Chroma:
+    """Return the active Chroma instance."""
+    return _vector_store
 
 
 def filter_books(subject: str | None = None, grade: int | None = None) -> dict | None:
