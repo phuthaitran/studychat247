@@ -56,13 +56,49 @@ print("Loading embeddings model...")
 embeddings = HuggingFaceEmbeddings(model_name="keepitreal/vietnamese-sbert")
 
 print(f"Loading vector store from '{CHROMA_PATH}'...")
-vector_store = Chroma(
+_vector_store: Chroma | None = Chroma(
     collection_name="textbooks",
     collection_metadata={"hnsw:space": "cosine"},
     embedding_function=embeddings,
     persist_directory=CHROMA_PATH,
 )
 print("Vector store loaded. Ready to answer questions.")
+
+
+def _get_vector_store() -> Chroma:
+    """Return the active Chroma instance, raising if it has been closed."""
+    if _vector_store is None:
+        raise RuntimeError("Vector store is not loaded. Call reload_vector_store() first.")
+    return _vector_store
+
+
+def close_vector_store() -> None:
+    """Release the Chroma client so its SQLite file lock is freed.
+
+    Call this BEFORE deleting / recreating the vectorstore directory during
+    ingestion, otherwise Windows raises [WinError 32] (file in use).
+    """
+    global _vector_store
+    if _vector_store is not None:
+        try:
+            _vector_store._client._system.stop()  # closes the SQLite connection
+        except Exception:
+            pass
+        _vector_store = None
+        print("Vector store closed and lock released.")
+
+
+def reload_vector_store() -> None:
+    """Re-open the Chroma client after ingestion has finished writing."""
+    global _vector_store
+    close_vector_store()  # ensure previous instance is cleaned up
+    _vector_store = Chroma(
+        collection_name="textbooks",
+        collection_metadata={"hnsw:space": "cosine"},
+        embedding_function=embeddings,
+        persist_directory=CHROMA_PATH,
+    )
+    print("Vector store reloaded successfully.")
 
 
 def filter_books(subject: str | None = None, grade: int | None = None) -> dict | None:
@@ -146,7 +182,7 @@ async def generate_answer(
     if metadata_filter is not None:
         search_kwargs["filter"] = metadata_filter
 
-    retriever = vector_store.as_retriever(
+    retriever = _get_vector_store().as_retriever(
         search_type="similarity_score_threshold",
         search_kwargs=search_kwargs,
     )

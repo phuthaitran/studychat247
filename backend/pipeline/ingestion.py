@@ -7,7 +7,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
-from document_title import title_injection
+from pipeline.document_title import title_injection
 
 load_dotenv()
 CHROMA_PATH = "vectorstore/chroma"
