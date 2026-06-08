@@ -8,6 +8,7 @@ import UserEditAdminForm from "../components/UserEditAdminForm";
 import { useAppContext } from "../context/AppContext";
 import { registerUser } from "../api/authApi";
 import { getUsers, updateUser, deleteUser } from "../api/userApi";
+import { triggerIngestion } from "../api/adminApi";
 
 const Admin = () => {
   const { logout, user } = useAppContext();
@@ -38,6 +39,26 @@ const Admin = () => {
   const handleLogout = async () => {
     setLogoutModalOpen(false);
     await logout();
+  };
+
+  // ── Textbook section - Update Knowledgebase ────────────────────────────────
+  const [kbUpdateConfirmModal, setKbUpdateConfirmModal] = useState(false);
+  const [kbLoading, setKbLoading] = useState(false);
+  const [kbStatus, setKbStatus] = useState(null); // { ok: bool, message: string }
+
+  const handleKbUpdate = async () => {
+    setKbUpdateConfirmModal(false);
+    setKbLoading(true);
+    setKbStatus(null);
+    try {
+      const message = await triggerIngestion();
+      setKbStatus({ ok: true, message });
+    } catch (err) {
+      const detail = err.response?.data?.detail ?? "An unexpected error occurred.";
+      setKbStatus({ ok: false, message: detail });
+    } finally {
+      setKbLoading(false);
+    }
   };
 
   // ── Add Account ────────────────────────────────────────────────────────────
@@ -171,8 +192,23 @@ const Admin = () => {
       <div className="dashboard-textbooks">
         <h1>Database management:</h1>
         <h2>Add or remove the books in "data" folder, then click on this button: </h2>
-        <button>Update Knowledgebase</button>
-        {/* Some text that will show database update status */}
+        <button
+          className="kb-update-button"
+          onClick={() => setKbUpdateConfirmModal(true)}
+          disabled={kbLoading}
+        >
+          Update Knowledgebase
+        </button>
+        {kbLoading && (
+          <p className="kb-status kb-status--loading">
+            ⏳ Updating knowledgebase, please wait…
+          </p>
+        )}
+        {!kbLoading && kbStatus && (
+          <p className={`kb-status ${kbStatus.ok ? "kb-status--success" : "kb-status--error"}`}>
+            {kbStatus.ok ? "✅" : "❌"} {kbStatus.message}
+          </p>
+        )}
       </div>
 
       {/* ── User Management ────────────────────────────────────────────────── */}
@@ -236,6 +272,17 @@ const Admin = () => {
         confirmLabel="Log out"
         cancelLabel="Cancel"
         isDanger={true}
+      />
+
+      {/* Update Knowledgebase confirm */}
+      <ConfirmModal
+        isOpen={kbUpdateConfirmModal}
+        onClose={() => setKbUpdateConfirmModal(false)}
+        onConfirm={handleKbUpdate}
+        title="Update Knowledgebase"
+        message="Are you sure you want to update the knowledgebase? This action cannot be undone"
+        confirmLabel="Update"
+        cancelLabel="Cancel"
       />
 
       {/* Add Account form */}

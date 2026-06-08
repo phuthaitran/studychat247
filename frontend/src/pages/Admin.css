@@ -76,6 +76,36 @@
     background: #f8d3c7;
 }
 
+/* KB update button — disabled state while ingestion is running */
+.kb-update-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Status line shown below the button */
+.kb-status {
+    margin: 4px 0 0;
+    font-size: 15px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.kb-status--loading {
+    color: #92400e;      /* amber tone */
+}
+
+.kb-status--success {
+    color: #166534;      /* green tone */
+}
+
+.kb-status--error {
+    color: #991b1b;      /* red tone */
+}
+
+
 .dashboard-header__logout {
     padding: 0.5rem 1rem;
     border-radius: 6px;
