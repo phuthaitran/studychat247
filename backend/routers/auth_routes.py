@@ -36,7 +36,7 @@ async def create_user(user_: UserCreate, db: Annotated[AsyncSession, Depends(get
     if user_.password != user_.confirm_password:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Passwords does not match"
+            detail="Mật khẩu không khớp"
         )
     result = await db.execute(
         select(user.User).where(func.lower(user.User.username) == user_.username.lower()),
@@ -45,7 +45,7 @@ async def create_user(user_: UserCreate, db: Annotated[AsyncSession, Depends(get
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Username already exists",
+            detail="Tài khoản đã tồn tại trên hệ thống",
         )
 
     result = await db.execute(
@@ -55,7 +55,7 @@ async def create_user(user_: UserCreate, db: Annotated[AsyncSession, Depends(get
     if existing_email:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email already registered",
+            detail="Email đã tồn tại trên hệ thống",
         )
 
     # Fetch the role row matching the requested role (defaults to USER)
@@ -112,7 +112,7 @@ async def login_for_access_token(
     if not user_ or not verify_password(form_data.password, user_.password_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
+            detail="Mật khẩu hoặc email không chính xác",
             headers={"WWW-Authenticate": "Bearer"},
         )
 

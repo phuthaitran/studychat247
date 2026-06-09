@@ -42,7 +42,7 @@ const LoginSignup = () => {
     setError('');
 
     if (!loginEmail || !loginPassword) {
-      setError('Please fill in all fields.');
+      setError('Hãy điền đầy đủ thông tin.');
       return;
     }
 
@@ -58,7 +58,7 @@ const LoginSignup = () => {
       }
     } catch (err) {
       const detail = err.response?.data?.detail;
-      setError(detail || 'Login failed. Please try again.');
+      setError(detail || 'Đăng nhập thất bại. Xin hãy thử lại.');
     } finally {
       setIsLoading(false);
     }
@@ -71,23 +71,23 @@ const LoginSignup = () => {
 
     // Client-side validation
     if (!regUsername || !regEmail || !regPassword || !regConfirmPassword) {
-      setError('Please fill in all fields.');
+      setError('Hãy điền đầy đủ thông tin.');
       return;
     }
     if (regPassword.length < 8 || regConfirmPassword.length < 8) {
-      setError('Password must be at least 8 characters.');
+      setError('Mật khẩu phải có ít nhất 8 ký tự');
       return;
     }
 
     if (regPassword !== regConfirmPassword) {
-      setError('Passwords does not match');
+      setError('Mật khẩu không khớp.');
       return
     }
 
     setIsLoading(true);
     try {
       await registerUser(regUsername, regEmail, regPassword, regConfirmPassword);
-      toast.success('Account created! You can now log in.', {
+      toast.success('Đăng ký thành công! Hãy đăng nhập.', {
         duration: 4000,
       });
       // Reset fields and go back to login form
@@ -98,7 +98,7 @@ const LoginSignup = () => {
       switchToLogin();
     } catch (err) {
       const detail = err.response?.data?.detail;
-      setError(detail || 'Registration failed. Please try again.');
+      setError(detail || 'Đăng ký thất bại. Xin hãy thử lại.');
     } finally {
       setIsLoading(false);
     }
@@ -117,7 +117,7 @@ const LoginSignup = () => {
       {activeForm === 'login' && (
         <div className="form-box active">
           <form className="form-box__inputs" onSubmit={handleLogin} noValidate>
-            <h2>Login</h2>
+            <h2>Đăng nhập</h2>
 
             {/* Error message displayed right below the h2 */}
             {error && <p className="form-error">{error}</p>}
@@ -143,7 +143,7 @@ const LoginSignup = () => {
               <input
                 type="password"
                 name="password"
-                placeholder="Password"
+                placeholder="Mật khẩu"
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
                 required
@@ -152,9 +152,9 @@ const LoginSignup = () => {
             </div>
 
             <button type="submit" name="login" disabled={isLoading}>
-              {isLoading ? 'Logging in...' : 'Login'}
+              {isLoading ? 'Đang đăng nhập...' : 'Đăng nhập'}
             </button>
-            <p>Don't have an account? <a href="#" onClick={(e) => { e.preventDefault(); switchToRegister(); }}>Register</a></p>
+            <p>Chưa có tài khoản? <a href="#" onClick={(e) => { e.preventDefault(); switchToRegister(); }}>Đăng ký ngay</a></p>
           </form>
         </div>
       )}
@@ -163,7 +163,7 @@ const LoginSignup = () => {
       {activeForm === 'register' && (
         <div className="form-box active">
           <form className="form-box__inputs" onSubmit={handleRegister} noValidate>
-            <h2>Register</h2>
+            <h2>Đăng ký</h2>
 
             {/* Error message displayed right below the h2 */}
             {error && <p className="form-error">{error}</p>}
@@ -173,7 +173,7 @@ const LoginSignup = () => {
               <input
                 type="text"
                 name="username"
-                placeholder="Username"
+                placeholder="Tên tài khoản"
                 value={regUsername}
                 onChange={(e) => setRegUsername(e.target.value)}
                 required
@@ -197,7 +197,7 @@ const LoginSignup = () => {
               <input
                 type="password"
                 name="password"
-                placeholder="Password (at least 8 characters)"
+                placeholder="Mật khẩu (ít nhất 8 ký tự)"
                 value={regPassword}
                 onChange={(e) => setRegPassword(e.target.value)}
                 required
@@ -209,7 +209,7 @@ const LoginSignup = () => {
               <input
                 type="password"
                 name="confirm-password"
-                placeholder="Confirm password"
+                placeholder="Xác nhận mật khẩu"
                 value={regConfirmPassword}
                 onChange={(e) => setRegConfirmPassword(e.target.value)}
                 required
@@ -218,9 +218,9 @@ const LoginSignup = () => {
             </div>
 
             <button type="submit" name="register" disabled={isLoading}>
-              {isLoading ? 'Creating account...' : 'Register'}
+              {isLoading ? 'Đang tạo tài khoản...' : 'Đăng ký'}
             </button>
-            <p>Already have an account? <a href="#" onClick={(e) => { e.preventDefault(); switchToLogin(); }}>Login</a></p>
+            <p>Đã có tài khoản? <a href="#" onClick={(e) => { e.preventDefault(); switchToLogin(); }}>Đăng nhập</a></p>
           </form>
         </div>
       )}

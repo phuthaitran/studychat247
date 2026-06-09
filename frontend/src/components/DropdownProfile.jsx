@@ -31,14 +31,14 @@ const DropdownProfile = () => {
       const updatedUser = await updateUser(user.id, { username, email });
       // Update the user in context so the UI reflects the new info immediately
       setUser(updatedUser);
-      toast.success("Profile updated successfully.");
+      toast.success("Thay đổi thông tin thành công.");
       setConfirmEditOpen(false);
       setEditFormOpen(false);
       setPendingEditData(null);
       setEditApiError("");
     } catch (err) {
       const detail = err.response?.data?.detail;
-      setEditApiError(detail || "Failed to update profile.");
+      setEditApiError(detail || "Không thể thay đổi thông tin.");
       setConfirmEditOpen(false); // Close confirm, keep form open to show error
     } finally {
       setEditLoading(false);
@@ -62,8 +62,8 @@ const DropdownProfile = () => {
   return (
     <div className="flex flex-col dropdown-profile">
       <ul className="flex flex-col gap-4">
-        <li className="hover:underline cursor-pointer" onClick={() => setEditFormOpen(true)}>Edit Profile</li>
-        <li className="text-red-500 hover:underline cursor-pointer" onClick={() => setIsLogoutOpen(true)}>Log out</li>
+        <li className="hover:underline cursor-pointer" onClick={() => setEditFormOpen(true)}>Sửa thông tin cá nhân</li>
+        <li className="text-red-500 hover:underline cursor-pointer" onClick={() => setIsLogoutOpen(true)}>Đăng xuất</li>
       </ul>
 
       {/* Edit Profile form */}
@@ -72,9 +72,9 @@ const DropdownProfile = () => {
         onClose={handleEditClose}
         onSubmit={handleEditSubmit}
         user={user}
-        title="Edit Profile"
-        confirmLabel="Save changes"
-        cancelLabel="Cancel"
+        title="Thông tin cá nhân"
+        confirmLabel="Thay đổi"
+        cancelLabel="Huỷ"
         apiError={editApiError}
       />
 
@@ -83,10 +83,10 @@ const DropdownProfile = () => {
         isOpen={confirmEditOpen}
         onClose={() => setConfirmEditOpen(false)}
         onConfirm={handleEditConfirm}
-        title="Save changes"
-        message={`Save profile changes for "${pendingEditData?.username}"?`}
-        confirmLabel={editLoading ? "Saving..." : "Save"}
-        cancelLabel="Cancel"
+        title="Xác nhận thay đổi"
+        message={`Thay đổi thông tin cá nhân của "${pendingEditData?.username}"?`}
+        confirmLabel={editLoading ? "Đang thay đổi..." : "Thay đổi"}
+        cancelLabel="Huỷ"
       />
 
       {/* Logout modal */}
@@ -94,10 +94,10 @@ const DropdownProfile = () => {
         isOpen={isLogoutOpen}
         onClose={() => setIsLogoutOpen(false)}
         onConfirm={handleLogout}
-        title="Log out"
-        message="Are you sure you want to log out?"
-        confirmLabel="Log out"
-        cancelLabel="Cancel"
+        title="Đăng xuất"
+        message="Bạn có muốn đăng xuất tài khoản?"
+        confirmLabel="Đăng xuất"
+        cancelLabel="Huỷ"
         isDanger={true}
       />
     </div>
