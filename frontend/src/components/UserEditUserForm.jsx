@@ -56,7 +56,7 @@ const UserEditUserForm = ({
     setError("");
 
     if (!username || !email) {
-      setError("Username and email are required.");
+      setError("Cần có đủ tên tài khoản và email.");
       return;
     }
 
@@ -75,7 +75,7 @@ const UserEditUserForm = ({
           <h2 className="user-form-modal__title">{title}</h2>
 
           <div className="user-form-modal__input">
-            <label>Username</label>
+            <label>Tên tài khoản</label>
             <input
               type="text"
               name="username"

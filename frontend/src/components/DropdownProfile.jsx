@@ -72,8 +72,8 @@ const DropdownProfile = () => {
         onClose={handleEditClose}
         onSubmit={handleEditSubmit}
         user={user}
-        title="Thông tin cá nhân"
-        confirmLabel="Thay đổi"
+        title="Cập nhật tài khoản"
+        confirmLabel="Lưu thay đỏi"
         cancelLabel="Huỷ"
         apiError={editApiError}
       />
@@ -83,9 +83,9 @@ const DropdownProfile = () => {
         isOpen={confirmEditOpen}
         onClose={() => setConfirmEditOpen(false)}
         onConfirm={handleEditConfirm}
-        title="Xác nhận thay đổi"
+        title="Cập nhật tài khoản"
         message={`Thay đổi thông tin cá nhân của "${pendingEditData?.username}"?`}
-        confirmLabel={editLoading ? "Đang thay đổi..." : "Thay đổi"}
+        confirmLabel={editLoading ? "Đang thay đổi..." : "Lưu thay đổi"}
         cancelLabel="Huỷ"
       />
 

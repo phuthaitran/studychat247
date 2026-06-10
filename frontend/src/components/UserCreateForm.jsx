@@ -51,15 +51,15 @@ const UserCreateForm = ({
     setError("");
 
     if (!username || !email || !password || !confirmPassword) {
-      setError("Please fill in all fields.");
+      setError("Hãy điền đầy đủ thông tin.");
       return;
     }
     if (password.length < 8) {
-      setError("Password must be at least 8 characters.");
+      setError("Mật khẩu cần ít nhất 8 ký tự.");
       return;
     }
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      setError("Mật khẩu không khớp.");
       return;
     }
 
@@ -78,7 +78,7 @@ const UserCreateForm = ({
           <h2 className="user-form-modal__title">{title}</h2>
 
           <div className="user-form-modal__input">
-            <label>Username</label>
+            <label>Tên tài khoản</label>
             <input
               type="text"
               name="username"
@@ -98,7 +98,7 @@ const UserCreateForm = ({
             />
           </div>
           <div className="user-form-modal__input">
-            <label>Password</label>
+            <label>Mật khẩu</label>
             <input
               type="password"
               name="password"
@@ -108,7 +108,7 @@ const UserCreateForm = ({
             />
           </div>
           <div className="user-form-modal__input">
-            <label>Confirm password</label>
+            <label>Xác nhận mật khẩu</label>
             <input
               type="password"
               name="confirm-password"
@@ -118,7 +118,7 @@ const UserCreateForm = ({
             />
           </div>
           <div className="user-form-modal__input">
-            <label>Role</label>
+            <label>Vai trò</label>
             <select
               name="role"
               id="role"

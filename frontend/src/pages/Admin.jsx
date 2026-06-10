@@ -81,7 +81,7 @@ const Admin = () => {
     try {
       const { username, email, password, confirmPassword, role } = pendingCreateData;
       await registerUser(username, email, password, confirmPassword, role);
-      toast.success(`Account "${username}" created successfully.`);
+      toast.success(`Tài khoản "${username}" đã được tạo.`);
       setConfirmCreateOpen(false);
       setCreateFormOpen(false);
       setPendingCreateData(null);
@@ -89,7 +89,7 @@ const Admin = () => {
       fetchUsers();
     } catch (err) {
       const detail = err.response?.data?.detail;
-      setCreateApiError(detail || "Failed to create account.");
+      setCreateApiError(detail || "Không thể tạo tài khoản");
       setConfirmCreateOpen(false); // Close confirm, keep form open to show error
     } finally {
       setCreateLoading(false);
@@ -129,7 +129,7 @@ const Admin = () => {
     try {
       const { username, email, role } = pendingEditData;
       await updateUser(userToEdit.id, { username, email, role });
-      toast.success(`Account "${username}" updated successfully.`);
+      toast.success(`Cập nhật tài khoản "${username}" thành công.`);
       setConfirmEditOpen(false);
       setEditFormOpen(false);
       setUserToEdit(null);
@@ -138,7 +138,7 @@ const Admin = () => {
       fetchUsers();
     } catch (err) {
       const detail = err.response?.data?.detail;
-      setEditApiError(detail || "Failed to update account.");
+      setEditApiError(detail || "Không thể cập nhật tài khoản.");
       setConfirmEditOpen(false); // Close confirm, keep form open to show error
     } finally {
       setEditLoading(false);
@@ -161,12 +161,12 @@ const Admin = () => {
     setDeleteLoading(true);
     try {
       await deleteUser(userToDelete.id);
-      toast.success(`Account "${userToDelete.username}" deleted.`);
+      toast.success(`Tài khoản "${userToDelete.username}" đã được xoá.`);
       setUserToDelete(null);
       fetchUsers();
     } catch (err) {
       const detail = err.response?.data?.detail;
-      toast.error(detail || "Failed to delete account.");
+      toast.error(detail || "Không thể xoá tài khoản.");
     } finally {
       setDeleteLoading(false);
     }
@@ -190,8 +190,8 @@ const Admin = () => {
 
       {/* ── Textbooks section ──────────────────────────────────────────────── */}
       <div className="dashboard-textbooks">
-        <h1>Database management:</h1>
-        <h2>Add or remove the books in "data" folder, then click on this button: </h2>
+        <h1>Quản lý knowledgebase:</h1>
+        <h2>Thêm hoặc xoá tệp trong thư mục "data/processed", xong ấn vào nút này: </h2>
         <button
           className="kb-update-button"
           onClick={() => setKbUpdateConfirmModal(true)}
@@ -201,7 +201,7 @@ const Admin = () => {
         </button>
         {kbLoading && (
           <p className="kb-status kb-status--loading">
-            ⏳ Updating knowledgebase, please wait…
+            ⏳ Đang cập nhật knowledgebase…
           </p>
         )}
         {!kbLoading && kbStatus && (
@@ -214,10 +214,10 @@ const Admin = () => {
       {/* ── User Management ────────────────────────────────────────────────── */}
       <div className="user-management">
         <div className="user-management-header">
-          <h1>User Management: </h1>
+          <h1>Quản lý người dùng: </h1>
           <button className="add-user-button" onClick={() => setCreateFormOpen(true)}>
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
-            Add Account
+            Tạo tài khoản
           </button>
         </div>
 
@@ -225,16 +225,16 @@ const Admin = () => {
         <table className="user-table">
           <thead>
             <tr>
-              <th>Username</th>
+              <th>Tên tài khoản</th>
               <th>Email</th>
-              <th>Role</th>
-              <th>Action</th>
+              <th>Vai trò</th>
+              <th>Hoạt động</th>
             </tr>
           </thead>
           <tbody>
             {listLoading ? (
               <tr>
-                <td colSpan={4} style={{ textAlign: "center", padding: "1.5rem" }}>Loading...</td>
+                <td colSpan={4} style={{ textAlign: "center", padding: "1.5rem" }}>Đang tải...</td>
               </tr>
             ) : (
               users.map((u) => {
@@ -249,8 +249,8 @@ const Admin = () => {
                       </span>
                     </td>
                     <td className="action-cell">
-                      <button className="btn-edit" onClick={() => handleEditOpen(u)}>Edit</button>
-                      <button className="btn-delete" onClick={() => setUserToDelete(u)}>Delete</button>
+                      <button className="btn-edit" onClick={() => handleEditOpen(u)}>Thay đổi</button>
+                      <button className="btn-delete" onClick={() => setUserToDelete(u)}>Xoá</button>
                     </td>
                   </tr>
                 );
@@ -267,10 +267,10 @@ const Admin = () => {
         isOpen={logoutModalOpen}
         onClose={() => setLogoutModalOpen(false)}
         onConfirm={handleLogout}
-        title="Log out"
-        message="Are you sure you want to log out?"
-        confirmLabel="Log out"
-        cancelLabel="Cancel"
+        title="Đăng xuất"
+        message="Bạn chắc chắn muốn đăng xuất?"
+        confirmLabel="Đăng xuất"
+        cancelLabel="Huỷ"
         isDanger={true}
       />
 
@@ -279,10 +279,10 @@ const Admin = () => {
         isOpen={kbUpdateConfirmModal}
         onClose={() => setKbUpdateConfirmModal(false)}
         onConfirm={handleKbUpdate}
-        title="Update Knowledgebase"
-        message="Are you sure you want to update the knowledgebase? This action cannot be undone"
-        confirmLabel="Update"
-        cancelLabel="Cancel"
+        title="Cập nhật Knowledgebase"
+        message="Bạn chắc chắn muốn cập nhật knowledgebase? Hành động này không thể hoàn tác."
+        confirmLabel="Cập nhật"
+        cancelLabel="Huỷ"
       />
 
       {/* Add Account form */}
@@ -290,9 +290,9 @@ const Admin = () => {
         isOpen={createFormOpen}
         onClose={handleCreateClose}
         onSubmit={handleCreateSubmit}
-        title="Add Account"
-        confirmLabel="Create account"
-        cancelLabel="Cancel"
+        title="Tạo tài khoản mới"
+        confirmLabel="Tạo tài khoản"
+        cancelLabel="Huỷ"
         apiError={createApiError}
       />
 
@@ -301,10 +301,10 @@ const Admin = () => {
         isOpen={confirmCreateOpen}
         onClose={() => setConfirmCreateOpen(false)}
         onConfirm={handleCreateConfirm}
-        title="Create account"
-        message={`Create new account "${pendingCreateData?.username}" with role "${pendingCreateData?.role}"?`}
-        confirmLabel={createLoading ? "Creating..." : "Create"}
-        cancelLabel="Cancel"
+        title="Xác nhận tài khoản"
+        message={`Tạo tài khoản "${pendingCreateData?.username}" with vai trò "${pendingCreateData?.role}"?`}
+        confirmLabel={createLoading ? "Đang tạo tài khoản..." : "Tạo tài khoản"}
+        cancelLabel="Huỷ"
       />
 
       {/* Edit Account form */}
@@ -313,9 +313,9 @@ const Admin = () => {
         onClose={handleEditClose}
         onSubmit={handleEditSubmit}
         user={userToEdit}
-        title="Edit Account"
-        confirmLabel="Save changes"
-        cancelLabel="Cancel"
+        title="Cập nhật tài khoản"
+        confirmLabel="Lưu thay đổi"
+        cancelLabel="Huỷ"
         apiError={editApiError}
       />
 
@@ -324,10 +324,10 @@ const Admin = () => {
         isOpen={confirmEditOpen}
         onClose={() => setConfirmEditOpen(false)}
         onConfirm={handleEditConfirm}
-        title="Save changes"
-        message={`Save changes to "${pendingEditData?.username}"?`}
-        confirmLabel={editLoading ? "Saving..." : "Save"}
-        cancelLabel="Cancel"
+        title="Cập nhật tài khoản"
+        message={`Thay đổi thông tin của "${pendingEditData?.username}"?`}
+        confirmLabel={editLoading ? "Đang thay đổi..." : "Lưu thay đổi"}
+        cancelLabel="Huỷ"
       />
 
       {/* Delete Account confirmation */}
@@ -335,10 +335,10 @@ const Admin = () => {
         isOpen={!!userToDelete}
         onClose={() => setUserToDelete(null)}
         onConfirm={handleDeleteConfirm}
-        title="Delete account"
-        message={`Are you sure you want to delete "${userToDelete?.username}"? This cannot be undone.`}
-        confirmLabel={deleteLoading ? "Deleting..." : "Delete"}
-        cancelLabel="Cancel"
+        title="Xoá tài khoản"
+        message={`Bạn có muốn xoá tài khoản "${userToDelete?.username}"? Hành động này không thể hoàn tác.`}
+        confirmLabel={deleteLoading ? "Đang xoá..." : "Xoá"}
+        cancelLabel="Huỷ"
         isDanger={true}
       />
     </>

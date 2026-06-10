@@ -27,7 +27,13 @@ async def get_current_user(current_user: CurrentUser):
 
 # return users list (for Admin page)
 @router.get("/users", response_model=list[UserPrivate])
-async def get_users(db: Annotated[AsyncSession, Depends(get_db)]):
+async def get_users(db: Annotated[AsyncSession, Depends(get_db)], current_user: CurrentUser):
+    is_admin = _is_admin(current_user)
+    if not is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to view the user list",
+        )
     result = await db.execute(
         select(user.User)
         .options(_user_with_roles())
@@ -100,7 +106,7 @@ async def update_user(
         if result.scalars().first():
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Username already exists",
+                detail="Tài khoản đã tồn tại trong hệ thống",
             )
 
     if user_update.email is not None and user_update.email.lower() != user_.email.lower():
@@ -110,7 +116,7 @@ async def update_user(
         if result.scalars().first():
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Email already registered",
+                detail="Email đã tồn tại trong hệ thống",
             )
 
     if user_update.username is not None:

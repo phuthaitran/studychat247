@@ -40,10 +40,10 @@ async def data_ingestion(current_user: CurrentUser):
         await loop.run_in_executor(None, reingest_documents, chunks)
 
         end_time = datetime.now()
-        return {"message": f"Operation finished after {end_time - start_time}"}
+        return {"message": f"Cập nhật knowledgebase thành công sau {end_time - start_time}"}
 
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Ingestion failed: {e}",
+            detail=f"Cập nhật thất bại: {e}",
         )
