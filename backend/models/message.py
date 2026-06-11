@@ -34,6 +34,6 @@ class Message(Base):
         default=lambda: datetime.now(UTC),
     )
     sequence_number: Mapped[int] = mapped_column(Integer, nullable=False, index=True)
-    token_count: Mapped[int] = mapped_column(Integer, nullable=True)
+    token_count: Mapped[int] = mapped_column(Integer, nullable=False)
 
     chat_session: Mapped[Session] = relationship(back_populates="messages")
