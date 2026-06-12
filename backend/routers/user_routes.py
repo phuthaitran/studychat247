@@ -8,15 +8,80 @@ from sqlalchemy.orm import selectinload
 
 from models import user
 from core.database import get_db
-from schemas.user_schema import UserUpdate, UserPublic, UserPrivate
+from schemas.user_schema import UserUpdate, UserCreate, UserPrivate
 
-from services.auth import CurrentUser
+from services.auth import CurrentUser, hash_password
 
 router = APIRouter()
 
 def _user_with_roles():
     """Reusable selectinload option for user + roles."""
     return selectinload(user.User.roles).selectinload(user.UserRole.role)
+
+# Register
+@router.post(
+    "",
+    response_model=UserPrivate,
+    status_code=status.HTTP_201_CREATED,
+)
+async def create_user(user_: UserCreate, db: Annotated[AsyncSession, Depends(get_db)]):
+    if user_.password != user_.confirm_password:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Mật khẩu không khớp"
+        )
+    result = await db.execute(
+        select(user.User).where(func.lower(user.User.username) == user_.username.lower()),
+    )
+    existing_user = result.scalars().first()
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Tài khoản đã tồn tại trên hệ thống",
+        )
+
+    result = await db.execute(
+        select(user.User).where(func.lower(user.User.email) == user_.email.lower()),
+    )
+    existing_email = result.scalars().first()
+    if existing_email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email đã tồn tại trên hệ thống",
+        )
+
+    # Fetch the role row matching the requested role (defaults to USER)
+    role_result = await db.execute(
+        select(user.Role).where(user.Role.role == user.RoleEnum(user_.role))
+    )
+    default_role = role_result.scalars().first()
+    if not default_role:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Role '{user_.role}' not configured in database",
+        )
+
+    new_user = user.User(
+        username=user_.username,
+        email=user_.email.lower(),
+        password_hash=hash_password(user_.password),
+    )
+    db.add(new_user)
+    await db.flush()  # Populate new_user.id before creating the join record
+
+    # Assign default USER role via the join table
+    user_role = user.UserRole(user_id=new_user.id, role_id=default_role.id)
+    db.add(user_role)
+
+    await db.commit()
+
+    # Re-fetch with roles eager-loaded for response serialisation
+    result = await db.execute(
+        select(user.User)
+        .where(user.User.id == new_user.id)
+        .options(selectinload(user.User.roles).selectinload(user.UserRole.role))
+    )
+    return result.scalars().first()
 
 
 # get_current_user

@@ -7,6 +7,20 @@
 import axiosInstance from './axiosInstance';
 
 /**
+ *  Create user (admin page)
+ *  This is to split user register (done by users) with user create (done by admins)
+ */  
+export const createUser = async (username, email, password, confirm_password, role = 'user') => {
+  const { data } = await axiosInstance.post('/user', {
+    username,
+    email,
+    password,
+    confirm_password,
+    role,
+  });
+  return data;
+};
+/**
  * Get all users (admin only).
  * Returns list of UserPrivate objects: { id, username, email, roles }.
  */

@@ -7,7 +7,7 @@ import UserCreateForm from "../components/UserCreateForm";
 import UserEditAdminForm from "../components/UserEditAdminForm";
 import { useAppContext } from "../context/AppContext";
 import { registerUser } from "../api/authApi";
-import { getUsers, updateUser, deleteUser } from "../api/userApi";
+import { getUsers, updateUser, deleteUser, createUser } from "../api/userApi";
 import { triggerIngestion } from "../api/adminApi";
 
 const Admin = () => {
@@ -80,7 +80,7 @@ const Admin = () => {
     setCreateLoading(true);
     try {
       const { username, email, password, confirmPassword, role } = pendingCreateData;
-      await registerUser(username, email, password, confirmPassword, role);
+      await createUser(username, email, password, confirmPassword, role);
       toast.success(`Tài khoản "${username}" đã được tạo.`);
       setConfirmCreateOpen(false);
       setCreateFormOpen(false);

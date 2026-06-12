@@ -24,16 +24,15 @@ export const loginUser = async (email, password) => {
 
 /**
  * Register.
- * The optional `role` parameter defaults to 'user', so existing callers
- * (e.g. LoginSignup.jsx) are unaffected. Admins can pass 'admin' explicitly.
+ * 
  */
-export const registerUser = async (username, email, password, confirm_password, role = 'user') => {
+export const registerUser = async (username, email, password, confirm_password) => {
   const { data } = await axiosInstance.post('/auth/register', {
     username,
     email,
     password,
     confirm_password,
-    role,
+    role: 'user',
   });
   return data;
 };
