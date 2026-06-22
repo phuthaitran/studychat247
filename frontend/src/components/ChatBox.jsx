@@ -141,7 +141,7 @@ const ChatBox = ({ setIsSidebarOpen }) => {
       {/* Topbar */}
       <Topbar setIsSidebarOpen={setIsSidebarOpen} />
 
-      <div className='flex-1 flex flex-col justify-between m-5 md:m-6 xl:mx-30 max-md:mt-14 overflow-hidden'>
+      <div className='flex-1 flex flex-col justify-between m-5 md:m-6 xl:mx-30 max-md:mt-8 overflow-hidden'>
 
         {/* ── Messages area ─────────────────────────────────────────── */}
         <div ref={messagesContainerRef} className='flex-1 mb-5 overflow-y-scroll'>
