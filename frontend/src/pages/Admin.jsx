@@ -6,7 +6,6 @@ import ConfirmModal from "../components/ConfirmModal";
 import UserCreateForm from "../components/UserCreateForm";
 import UserEditAdminForm from "../components/UserEditAdminForm";
 import { useAppContext } from "../context/AppContext";
-import { registerUser } from "../api/authApi";
 import { getUsers, updateUser, deleteUser, createUser } from "../api/userApi";
 import { triggerIngestion } from "../api/adminApi";
 
@@ -23,7 +22,7 @@ const Admin = () => {
       const data = await getUsers();
       setUsers(data);
     } catch {
-      toast.error("Failed to load users.");
+      toast.error("Không thể hiện thông tin người dùng.");
     } finally {
       setListLoading(false);
     }

@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 from langchain_community.document_loaders import DirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
-from langchain_huggingface import HuggingFaceEmbeddings
 from pipeline.document_title import title_injection
 
 load_dotenv()
@@ -23,8 +22,6 @@ MARKDOWN_SEPARATORS = [
 ]
 
 pattern = re.compile(r"(?:^|[-_])(\d{2})(?:[-_]|$)", re.IGNORECASE) # toan-11-kntt, math_11_something
-
-embeddings = HuggingFaceEmbeddings(model_name="keepitreal/vietnamese-sbert")
 
 subjects = ["math", "history"]
 
