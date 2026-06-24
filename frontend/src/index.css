@@ -6,8 +6,8 @@ body {
   margin: 0;
 }
 
-* {
-  font-family: Inter, 'Segoe UI', Roboto, 'Open Sans', 'Helvetica Neue', Helvetica, sans-serif;
+*:not(.katex):not(.katex *) {
+  font-family: Inter, Arial, 'Open Sans', 'Helvetica Neue', Helvetica, sans-serif;
 }
 
 @theme {
@@ -21,6 +21,7 @@ body {
 .reset-tw :not(pre):not(code):not(.katex):not(.katex *) {
   all: revert
 }
+
 /* -- Auth loading spinner ----------------------------------------------------- */
 .auth-spinner {
   display: inline-block;
@@ -34,5 +35,7 @@ body {
 }
 
 @keyframes auth-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
